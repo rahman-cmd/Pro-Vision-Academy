@@ -64,6 +64,14 @@
                 <img src="/images/logo.png" alt="Logo" class="h-8 w-8 sm:h-10 sm:w-10">
             </div>
             
+            <!-- View Frontend Website Button -->
+            <div class="px-2 py-3 border-b border-gray-700">
+                <a href="/" target="_blank" class="flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors font-medium">
+                    <i class="fas fa-external-link-alt w-4 mr-2"></i>
+                    <span>View Frontend Website</span>
+                </a>
+            </div>
+            
             <nav class="flex-1 px-2 py-4 custom-scrollbar overflow-y-auto">
                 <ul class="space-y-1">
                     <li>
