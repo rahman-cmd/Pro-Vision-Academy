@@ -1,0 +1,42 @@
+/* Hamburger and responsive styles */
+.mobile-nav {
+    display: none;
+}
+@media (max-width: 1023px) {
+    .desktop-nav {
+        display: none !important;
+    }
+    .mobile-nav {
+        display: flex !important;
+    }
+}
+@media (min-width: 1024px) {
+    .mobile-menu {
+        display: none !important;
+    }
+}
+
+/* Small helper for badge position on hero */
+.hero-badge { position: absolute; bottom: -2.5rem; left: 50%; transform: translateX(-50%); }
+
+/* Typing animation styles */
+#typed {
+    display: inline-block;
+    white-space: pre-wrap; /* allow line breaks */
+}
+#typed-cursor {
+    display: inline-block;
+    width: 2px;
+    background: #b8d6ea;
+    margin-left: 6px;
+    animation: blink 1s step-end infinite;
+    height: 1.1em;
+    vertical-align: middle;
+}
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* Tabs styling (kept minimal, main styles via Tailwind) */
+
+/* You can add more custom styles here if needed */
