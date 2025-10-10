@@ -67,22 +67,22 @@
                     
                     <!-- User Menu -->
                     <div class="relative">
-                        <button id="user-dropdown-toggle" class="flex items-center space-x-1 sm:space-x-2 text-white hover:text-gray-200 p-1">
+                        <button id="userDropdown" class="flex items-center text-white hover:text-gray-300 focus:outline-none p-2">
+                            <span class="mr-2 hidden sm:block text-sm">Student</span>
                             <i class="fas fa-user-circle text-xl sm:text-2xl"></i>
-                            <span class="hidden sm:block text-sm">Student</span>
-                            <i class="fas fa-chevron-down text-xs sm:text-sm"></i>
+                            <i class="fas fa-chevron-down ml-1 sm:ml-2 text-xs sm:text-sm"></i>
                         </button>
                         
                         <!-- Dropdown Menu -->
-                        <div id="user-dropdown" class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 mobile-dropdown md:w-48 hidden">
-                            <a href="{{ route('student.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <div id="userDropdownMenu" class="absolute right-0 mt-2 w-40 sm:w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                            <a href="{{ route('student.profile') }}" class="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-user mr-2"></i>Profile
                             </a>
-                            <a href="{{ route('student.settings') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="{{ route('student.settings') }}" class="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-cog mr-2"></i>Settings
                             </a>
                             <div class="border-t border-gray-100"></div>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a href="#" class="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="fas fa-sign-out-alt mr-2"></i>Logout
                             </a>
                             <form id="logout-form" action="{{ route('student.logout') }}" method="POST" style="display: none;">
@@ -101,22 +101,22 @@
     <script>
         // User dropdown toggle
         document.addEventListener('DOMContentLoaded', function() {
-            const userMenuToggle = document.getElementById('userMenuToggle');
             const userDropdown = document.getElementById('userDropdown');
+            const userDropdownMenu = document.getElementById('userDropdownMenu');
             
-            userMenuToggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('show');
-            });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function() {
-                userDropdown.classList.remove('show');
-            });
-            
-            // Prevent dropdown from closing when clicking inside
-            userDropdown.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
+            // User dropdown functionality
+            if (userDropdown && userDropdownMenu) {
+                userDropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    userDropdownMenu.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userDropdown.contains(e.target)) {
+                        userDropdownMenu.classList.add('hidden');
+                    }
+                });
+            }
         });
     </script>

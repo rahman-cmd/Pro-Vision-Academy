@@ -11,7 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Register custom middleware aliases
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'student' => \App\Http\Middleware\StudentMiddleware::class,
+        ]);
+        
+        // Override the default RedirectIfAuthenticated middleware
+        $middleware->redirectGuestsTo('/login');
+        $middleware->redirectUsersTo('/student/dashboard');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
