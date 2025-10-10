@@ -23,11 +23,35 @@ class CourseRegistrationSeeder extends Seeder
             return;
         }
 
-        $registrations = [
+        // Create unique user-course combinations to avoid duplicate constraint violations
+        $usedCombinations = [];
+        
+        $getUniqueUserCourse = function() use ($students, $courses, &$usedCombinations) {
+            $maxAttempts = 100;
+            $attempts = 0;
+            
+            do {
+                $userId = $students->random()->id;
+                $courseId = $courses->random()->id;
+                $combination = $userId . '-' . $courseId;
+                $attempts++;
+            } while (in_array($combination, $usedCombinations) && $attempts < $maxAttempts);
+            
+            if ($attempts >= $maxAttempts) {
+                // If we can't find a unique combination, skip this registration
+                return null;
+            }
+            
+            $usedCombinations[] = $combination;
+            return ['user_id' => $userId, 'course_id' => $courseId];
+        };
+
+        $registrations = [];
+        
+        // Generate registrations with unique user-course combinations
+        $registrationTemplates = [
             // Confirmed registrations
             [
-                'user_id' => $students->random()->id,
-                'course_id' => $courses->random()->id,
                 'registered_at' => now()->subDays(30),
                 'status' => 'confirmed',
                 'payment_status' => 'paid',
@@ -237,8 +261,13 @@ class CourseRegistrationSeeder extends Seeder
             ],
         ];
 
-        foreach ($registrations as $registration) {
-            CourseRegistration::create($registration);
+        // Create registrations with unique user-course combinations
+        foreach ($registrationTemplates as $template) {
+            $userCourse = $getUniqueUserCourse();
+            if ($userCourse) {
+                $registration = array_merge($template, $userCourse);
+                CourseRegistration::create($registration);
+            }
         }
     }
 }

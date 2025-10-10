@@ -97,6 +97,18 @@
                     @enderror
                 </div>
 
+                <!-- WhatsApp Available -->
+                <div>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="whatsapp_available" name="whatsapp_available" value="1" 
+                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                               {{ old('whatsapp_available') ? 'checked' : '' }}>
+                        <span class="ml-2 text-sm text-gray-700">
+                            <i class="fab fa-whatsapp text-green-500 mr-1"></i>This number is available on WhatsApp
+                        </span>
+                    </label>
+                </div>
+
                 <!-- Date of Birth -->
                 <div>
                     <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-2">
@@ -111,312 +123,217 @@
                 </div>
 
                 <!-- Gender -->
-                 <div>
+                <div>
                     <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-venus-mars text-gray-400 mr-2"></i>Gender
                     </label>
                     <select id="gender" name="gender" required 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                        <option value="">Select your gender</option>
+                        <option value="">Select Gender</option>
                         <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
                         <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
                         <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
+                        <option value="prefer_not_to_say" {{ old('gender') == 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
                     </select>
                     @error('gender')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-                 </div>
+                </div>
+
+                <!-- Nationality -->
+                <div>
+                    <label for="nationality" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-flag text-gray-400 mr-2"></i>Nationality <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="nationality" name="nationality" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="Enter your nationality"
+                           value="{{ old('nationality') }}">
+                    @error('nationality')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                
+
+                <!-- Clinical Experience -->
+                <div>
+                    <label for="clinical_experience" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-stethoscope text-gray-400 mr-2"></i>How many years of clinical experience do you have? <span class="text-red-500">*</span>
+                    </label>
+                    <select id="clinical_experience" name="clinical_experience" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                        <option value="">Select experience level</option>
+                        <option value="1-4" {{ old('clinical_experience') == '1-4' ? 'selected' : '' }}>1-4 years</option>
+                        <option value="5-9" {{ old('clinical_experience') == '5-9' ? 'selected' : '' }}>5-9 years</option>
+                        <option value="10+" {{ old('clinical_experience') == '10+' ? 'selected' : '' }}>10 years +</option>
+                    </select>
+                    @error('clinical_experience')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Oman License -->
+                <div>
+                    <label for="oman_license" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-certificate text-gray-400 mr-2"></i>Do you have a license to practice Dentistry in Oman? <span class="text-red-500">*</span>
+                    </label>
+                    <select id="oman_license" name="oman_license" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                        <option value="">Select option</option>
+                        <option value="yes" {{ old('oman_license') == 'yes' ? 'selected' : '' }}>Yes</option>
+                        <option value="no" {{ old('oman_license') == 'no' ? 'selected' : '' }}>No</option>
+                    </select>
+                    @error('oman_license')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Dental Degree -->
+                <div>
+                    <label for="dental_degree" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-graduation-cap text-gray-400 mr-2"></i>Which Dental Degree do you have? <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="dental_degree" name="dental_degree" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="e.g., BDS, Masters, PhD, etc."
+                           value="{{ old('dental_degree') }}">
+                    @error('dental_degree')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Graduation Institute -->
+                <div>
+                    <label for="graduation_institute" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-university text-gray-400 mr-2"></i>Which Institute did you graduate from? <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="graduation_institute" name="graduation_institute" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="Enter your graduation institute"
+                           value="{{ old('graduation_institute') }}">
+                    @error('graduation_institute')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Graduation Year -->
+                <div>
+                    <label for="graduation_year" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-calendar-alt text-gray-400 mr-2"></i>Which year did you graduate?
+                    </label>
+                    <input type="number" id="graduation_year" name="graduation_year" 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="e.g., 2020"
+                           min="1950" max="{{ date('Y') }}"
+                           value="{{ old('graduation_year') }}">
+                    @error('graduation_year')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Current Workplace -->
+                <div>
+                    <label for="current_workplace" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-building text-gray-400 mr-2"></i>What is the institution or practice name where you currently work?
+                    </label>
+                    <input type="text" id="current_workplace" name="current_workplace" 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="Enter your current workplace"
+                           value="{{ old('current_workplace') }}">
+                    @error('current_workplace')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Implantology Experience -->
+                <div>
+                    <label for="implantology_experience" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-tooth text-gray-400 mr-2"></i>Have you had any previous training or experience related to Implantology? <span class="text-red-500">*</span>
+                    </label>
+                    <select id="implantology_experience" name="implantology_experience" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                        <option value="">Select experience level</option>
+                        <option value="very_little_to_none" {{ old('implantology_experience') == 'very_little_to_none' ? 'selected' : '' }}>Very little to none</option>
+                        <option value="basic" {{ old('implantology_experience') == 'basic' ? 'selected' : '' }}>Basic</option>
+                        <option value="intermediate" {{ old('implantology_experience') == 'intermediate' ? 'selected' : '' }}>Intermediate</option>
+                        <option value="advanced" {{ old('implantology_experience') == 'advanced' ? 'selected' : '' }}>Advanced</option>
+                    </select>
+                    @error('implantology_experience')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- How heard about course -->
+                <div>
+                    <label for="how_heard_about_course" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-bullhorn text-gray-400 mr-2"></i>How did you hear about this course?
+                    </label>
+                    <input type="text" id="how_heard_about_course" name="how_heard_about_course" 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="e.g., Social media, colleague, website, etc."
+                           value="{{ old('how_heard_about_course') }}">
+                    @error('how_heard_about_course')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Enrollment Reason -->
+                <div>
+                    <label for="enrollment_reason" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-question-circle text-gray-400 mr-2"></i>Why do you wish to enroll on the Dental Implantology course?
+                    </label>
+                    <textarea id="enrollment_reason" name="enrollment_reason" rows="4"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              placeholder="Please explain your motivation for enrolling in this course">{{ old('enrollment_reason') }}</textarea>
+                    @error('enrollment_reason')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 <!-- Password -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-lock text-gray-400 mr-2"></i>Password
                     </label>
-                    <div class="relative">
-                        <input type="password" id="password" name="password" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors pr-12"
-                               placeholder="Create a strong password">
-                        <button type="button" id="togglePassword" 
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-eye" id="eyeIcon"></i>
-                        </button>
-                    </div>
+                    <input type="password" id="password" name="password" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="Create a strong password">
                     @error('password')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                                <!-- Confirm Password -->
+                <!-- Confirm Password -->
                 <div>
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-lock text-gray-400 mr-2"></i>Confirm Password
                     </label>
-                    <div class="relative">
-                        <input type="password" id="password_confirmation" name="password_confirmation" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors pr-12"
-                               placeholder="Confirm your password">
-                        <button type="button" id="toggleConfirmPassword" 
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-eye" id="confirmEyeIcon"></i>
-                        </button>
-                    </div>
+                    <input type="password" id="password_confirmation" name="password_confirmation" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="Confirm your password">
                     @error('password_confirmation')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Address Information -->
-                <div>
-                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>Address
-                    </label>
-                    <input type="text" id="address" name="address" required 
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                           placeholder="Enter your address"
-                           value="{{ old('address') }}">
-                    @error('address')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- City -->
-                    <div>
-                        <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-city text-gray-400 mr-2"></i>City
-                        </label>
-                        <input type="text" id="city" name="city" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                               placeholder="City"
-                               value="{{ old('city') }}">
-                        @error('city')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- State -->
-                    <div>
-                        <label for="state" class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-flag text-gray-400 mr-2"></i>State
-                        </label>
-                        <input type="text" id="state" name="state" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                               placeholder="State"
-                               value="{{ old('state') }}">
-                        @error('state')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Zip Code -->
-                    <div>
-                        <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-mail-bulk text-gray-400 mr-2"></i>Zip Code
-                        </label>
-                        <input type="text" id="zip_code" name="zip_code" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                               placeholder="Zip Code"
-                               value="{{ old('zip_code') }}">
-                        @error('zip_code')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Country -->
-                    <div>
-                        <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-globe text-gray-400 mr-2"></i>Country
-                        </label>
-                        <input type="text" id="country" name="country" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                               placeholder="Country"
-                               value="{{ old('country') }}">
-                        @error('country')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Emergency Contact Information -->
-                <div class="border-t pt-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Emergency Contact Information</h3>
-                    
-                    <div>
-                        <label for="emergency_name" class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-user-friends text-gray-400 mr-2"></i>Emergency Contact Name
-                        </label>
-                        <input type="text" id="emergency_name" name="emergency_name" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                               placeholder="Emergency contact full name"
-                               value="{{ old('emergency_name') }}">
-                        @error('emergency_name')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 mt-4">
-                        <!-- Emergency Relationship -->
-                        <div>
-                            <label for="emergency_relationship" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-heart text-gray-400 mr-2"></i>Relationship
-                            </label>
-                            <input type="text" id="emergency_relationship" name="emergency_relationship" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                   placeholder="e.g., Parent, Spouse"
-                                   value="{{ old('emergency_relationship') }}">
-                            @error('emergency_relationship')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Emergency Phone -->
-                        <div>
-                            <label for="emergency_phone" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-phone-alt text-gray-400 mr-2"></i>Emergency Phone
-                            </label>
-                            <input type="tel" id="emergency_phone" name="emergency_phone" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                   placeholder="+968 XXXXXXXX"
-                                   value="{{ old('emergency_phone') }}">
-                            @error('emergency_phone')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <!-- Terms and Conditions -->
-                <div class="flex items-start">
-                    <input type="checkbox" id="terms" name="terms" required 
-                           class="mt-1 mr-3 text-blue-600 focus:ring-blue-500"
-                           {{ old('terms') ? 'checked' : '' }}>
-                    <label for="terms" class="text-sm text-gray-700">
-                        I agree to the <a href="#" class="text-blue-600 hover:text-blue-800">Terms and Conditions</a> 
-                        and <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
-                    </label>
-                </div>
-                @error('terms')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-
                 <!-- Submit Button -->
                 <button type="submit" 
-                        class="w-full gradient-bg text-white font-semibold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity transform hover:scale-105 duration-200">
+                        class="w-full gradient-bg text-white py-3 px-4 rounded-lg font-semibold hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     <i class="fas fa-user-plus mr-2"></i>Create Account
                 </button>
             </form>
 
             <!-- Login Link -->
-            <div class="mt-6 text-center">
+            <div class="text-center mt-6">
                 <p class="text-gray-600">
                     Already have an account? 
-                    <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800 font-medium">Sign In</a>
+                    <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800 font-semibold">
+                        Sign In
+                    </a>
                 </p>
             </div>
         </div>
-
-        <!-- Footer -->
-        <div class="text-center mt-8 text-gray-500 text-sm">
-            <p>&copy; 2025 Pro Vision Academy. All rights reserved.</p>
-        </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('password_confirmation');
-            const togglePassword = document.getElementById('togglePassword');
-            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-            const eyeIcon = document.getElementById('eyeIcon');
-            const confirmEyeIcon = document.getElementById('confirmEyeIcon');
-            
-            // Toggle password visibility
-            togglePassword.addEventListener('click', function() {
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-                
-                if (type === 'password') {
-                    eyeIcon.classList.remove('fa-eye-slash');
-                    eyeIcon.classList.add('fa-eye');
-                } else {
-                    eyeIcon.classList.remove('fa-eye');
-                    eyeIcon.classList.add('fa-eye-slash');
-                }
-            });
-            
-            // Toggle confirm password visibility
-            toggleConfirmPassword.addEventListener('click', function() {
-                const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
-                confirmPassword.setAttribute('type', type);
-                
-                if (type === 'password') {
-                    confirmEyeIcon.classList.remove('fa-eye-slash');
-                    confirmEyeIcon.classList.add('fa-eye');
-                } else {
-                    confirmEyeIcon.classList.remove('fa-eye');
-                    confirmEyeIcon.classList.add('fa-eye-slash');
-                }
-            });
-            
-            // Phone number formatting
-            const phoneInput = document.getElementById('phone');
-            phoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.startsWith('968')) {
-                    value = '+' + value;
-                } else if (value.length > 0 && !value.startsWith('968')) {
-                    value = '+968' + value;
-                }
-                e.target.value = value;
-            });
-            
-            // Password confirmation validation
-            confirmPassword.addEventListener('input', function() {
-                if (password.value !== confirmPassword.value) {
-                    confirmPassword.setCustomValidity('Passwords do not match');
-                } else {
-                    confirmPassword.setCustomValidity('');
-                }
-            });
-            
-            // Form submission
-            form.addEventListener('submit', function(e) {
-                if (password.value !== confirmPassword.value) {
-                    e.preventDefault();
-                    alert('Passwords do not match!');
-                    return;
-                }
-                
-                // Show loading state
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating Account...';
-                submitBtn.disabled = true;
-                
-                // Re-enable button after a delay (in case of client-side validation errors)
-                setTimeout(() => {
-                    if (submitBtn.disabled) {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }
-                }, 5000);
-            });
-            
-            // Auto-hide success/error messages after 5 seconds
-            const alerts = document.querySelectorAll('.bg-green-100, .bg-red-100');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    alert.style.transition = 'opacity 0.5s';
-                    alert.style.opacity = '0';
-                    setTimeout(() => alert.remove(), 500);
-                }, 5000);
-            });
-        });
-    </script>
 </body>
 </html>

@@ -18,18 +18,23 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('phone')->nullable();
-            $table->date('date_of_birth')->nullable();
-            $table->enum('gender', ['male', 'female', 'other', 'prefer_not_to_say'])->nullable();
-            $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('zip_code')->nullable();
-            $table->string('country')->nullable();
-            $table->string('emergency_name')->nullable();
-            $table->string('emergency_relationship')->nullable();
-            $table->string('emergency_phone')->nullable();
-            $table->string('profile_picture')->nullable();
+            $table->string('phone');
+            $table->date('date_of_birth');
+            $table->enum('gender', ['male', 'female', 'other', 'prefer_not_to_say']);
+            
+            // Dental-specific fields
+            $table->string('nationality');
+            $table->boolean('whatsapp_available')->default(false);
+            $table->enum('clinical_experience', ['1-4', '5-9', '10+']);
+            $table->enum('oman_license', ['yes', 'no']);
+            $table->string('dental_degree');
+            $table->string('graduation_institute');
+            $table->year('graduation_year')->nullable();
+            $table->string('current_workplace')->nullable();
+            $table->enum('implantology_experience', ['very_little_to_none', 'basic', 'intermediate', 'advanced']);
+            $table->string('how_heard_about_course')->nullable();
+            $table->text('enrollment_reason')->nullable();
+            
             $table->enum('role', ['admin', 'student', 'instructor'])->default('student');
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
             $table->rememberToken();
