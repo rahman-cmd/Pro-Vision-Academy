@@ -188,9 +188,12 @@
                                         <i class="fas fa-cog mr-2"></i>Settings
                                     </a>
                                     <div class="border-t border-gray-100"></div>
-                                    <a href="#" class="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="w-full text-left block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

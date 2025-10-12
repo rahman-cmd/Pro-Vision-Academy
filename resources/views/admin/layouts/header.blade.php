@@ -33,9 +33,12 @@
                         <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Admin" class="w-8 h-8 rounded-full">
                     </button>
                 </div>
-                <a href="#" class="hover:text-gray-300">
-                    <i class="fas fa-sign-out-alt"></i>
-                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="hover:text-gray-300" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </header>

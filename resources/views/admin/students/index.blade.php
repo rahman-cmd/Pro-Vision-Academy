@@ -13,7 +13,7 @@
             </div>
             <div class="ml-4">
                 <p class="text-sm font-medium text-gray-600">Total Students</p>
-                <p class="text-2xl font-bold text-gray-900">156</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] ?? 0 }}</p>
             </div>
         </div>
     </div>
@@ -25,7 +25,7 @@
             </div>
             <div class="ml-4">
                 <p class="text-sm font-medium text-gray-600">Active Students</p>
-                <p class="text-2xl font-bold text-gray-900">142</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['active'] ?? 0 }}</p>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
             </div>
             <div class="ml-4">
                 <p class="text-sm font-medium text-gray-600">Pending</p>
-                <p class="text-2xl font-bold text-gray-900">8</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['pending'] ?? 0 }}</p>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
             </div>
             <div class="ml-4">
                 <p class="text-sm font-medium text-gray-600">Inactive</p>
-                <p class="text-2xl font-bold text-gray-900">6</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['inactive'] ?? 0 }}</p>
             </div>
         </div>
     </div>
@@ -58,32 +58,26 @@
 <!-- Filters and Search -->
 <div class="bg-white rounded-lg shadow-md p-6 mb-6">
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div class="flex flex-col sm:flex-row gap-4">
-            <div class="relative">
-                <input type="text" placeholder="Search students..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19506b] focus:border-transparent w-full sm:w-64">
+        <form method="GET" action="{{ route('admin.students') }}" class="flex flex-col lg:flex-row lg:items-center gap-4 w-full">
+            <div class="relative w-full sm:w-64">
+                <input name="search" value="{{ request('search') }}" type="text" placeholder="Search name, email, phone..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19506b] focus:border-transparent w-full">
                 <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
             </div>
-            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19506b] focus:border-transparent">
-                <option value="">All Courses</option>
-                <option value="dental-surgery">Dental Surgery Course</option>
-                <option value="orthodontics">Orthodontics Course</option>
-                <option value="periodontics">Periodontics Course</option>
-            </select>
-            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19506b] focus:border-transparent">
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="pending">Pending</option>
-                <option value="inactive">Inactive</option>
-            </select>
-        </div>
-        <div class="flex gap-2">
-            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                <i class="fas fa-filter mr-2"></i>Filter
-            </button>
-            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                <i class="fas fa-download mr-2"></i>Export
-            </button>
-        </div>
+            <div>
+                <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19506b] focus:border-transparent">
+                    <option value="">All Status</option>
+                    <option value="active" {{ request('status')==='active' ? 'selected' : '' }}>Active</option>
+                    <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="inactive" {{ request('status')==='inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                    <i class="fas fa-filter mr-2"></i>Apply
+                </button>
+                <a href="{{ route('admin.students') }}" class="px-4 py-2 bg-white border text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">Reset</a>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -94,164 +88,56 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enrolled</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                <!-- Sample Student Rows -->
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg" alt="Ahmed Hassan">
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">Ahmed Hassan</div>
-                                <div class="text-sm text-gray-500">ahmed.hassan@email.com</div>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($students as $student)
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="ml-0">
+                                    <div class="text-sm font-medium text-gray-900">{{ $student->first_name }} {{ $student->last_name }}</div>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">Dental Surgery Course</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 15, 2024</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="w-16 bg-gray-200 rounded-full h-2">
-                                <div class="bg-[#19506b] h-2 rounded-full" style="width: 75%"></div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->email }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->phone }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @php($st = $student->status ?? 'pending')
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $st==='active' ? 'bg-green-100 text-green-800' : ($st==='inactive' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">{{ ucfirst($st) }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->created_at ? $student->created_at->format('M d, Y') : '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                <button class="text-[#19506b] hover:text-[#164158]" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-blue-600 hover:text-blue-900" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-900" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
-                            <span class="ml-2 text-sm text-gray-600">75%</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-[#19506b] hover:text-[#164158]" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-blue-600 hover:text-blue-900" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/women/2.jpg" alt="Fatima Al-Zahra">
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">Fatima Al-Zahra</div>
-                                <div class="text-sm text-gray-500">fatima.zahra@email.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">Orthodontics Course</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dec 20, 2023</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="w-16 bg-gray-200 rounded-full h-2">
-                                <div class="bg-[#19506b] h-2 rounded-full" style="width: 92%"></div>
-                            </div>
-                            <span class="ml-2 text-sm text-gray-600">92%</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-[#19506b] hover:text-[#164158]" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-blue-600 hover:text-blue-900" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/3.jpg" alt="Omar Khalil">
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">Omar Khalil</div>
-                                <div class="text-sm text-gray-500">omar.khalil@email.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">Periodontics Course</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Feb 01, 2024</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="w-16 bg-gray-200 rounded-full h-2">
-                                <div class="bg-[#19506b] h-2 rounded-full" style="width: 15%"></div>
-                            </div>
-                            <span class="ml-2 text-sm text-gray-600">15%</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <button class="text-[#19506b] hover:text-[#164158]" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-blue-600 hover:text-blue-900" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No students found.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
     
     <!-- Pagination -->
-    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-        <div class="flex-1 flex justify-between sm:hidden">
-            <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</button>
-            <button class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</button>
-        </div>
-        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-                <p class="text-sm text-gray-700">
-                    Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">156</span> results
-                </p>
-            </div>
-            <div>
-                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                    <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="bg-[#19506b] border-[#19506b] text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</button>
-                    <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</button>
-                    <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</button>
-                    <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </nav>
-            </div>
-        </div>
+    <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+        {{ $students->links() }}
     </div>
 </div>
 @endsection

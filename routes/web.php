@@ -63,9 +63,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Students Management
-    Route::get('/students', function () {
-        return view('admin.students.index');
-    })->name('students');
+    Route::get('/students', [\App\Http\Controllers\Admin\StudentController::class, 'index'])->name('students');
     
     // Hero Section Management
     Route::resource('hero', HeroSectionController::class);
