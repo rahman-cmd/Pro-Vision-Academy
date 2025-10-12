@@ -204,6 +204,7 @@
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 custom-scrollbar">
                 <div class="max-w-7xl mx-auto">
+                    @include('admin.layouts.alerts')
                     @yield('content')
                 </div>
             </main>

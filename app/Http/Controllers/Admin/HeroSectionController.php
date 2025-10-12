@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\HeroSection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HeroSectionController extends Controller
 {
@@ -52,7 +53,7 @@ class HeroSectionController extends Controller
             'description' => 'nullable|string',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|url',
-            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'sort_order' => 'nullable|integer|min:0',
             'status' => 'required|in:active,inactive'
         ]);
@@ -60,12 +61,16 @@ class HeroSectionController extends Controller
         $data = $request->only(['title','subtitle','description','button_text','button_link','sort_order','status']);
         
         if ($request->hasFile('background_image')) {
-            $data['background_image'] = $request->file('background_image')->store('hero-sections', 'public');
+            $file = $request->file('background_image');
+            if (!$file->isValid()) {
+                return back()->with('error', 'The background image failed to upload.')->withInput();
+            }
+            $data['background_image'] = $file->store('hero-sections', 'public');
         }
 
-        HeroSection::create($data);
+        $hero = HeroSection::create($data);
 
-        return redirect()->route('admin.hero.index')->with('success', 'Hero section created successfully!');
+        return redirect()->route('admin.hero.edit', $hero)->with('success', 'Hero section created successfully!');
     }
 
     /**
@@ -95,7 +100,7 @@ class HeroSectionController extends Controller
             'description' => 'nullable|string',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|url',
-            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'sort_order' => 'nullable|integer|min:0',
             'status' => 'required|in:active,inactive'
         ]);
@@ -103,12 +108,20 @@ class HeroSectionController extends Controller
         $data = $request->only(['title','subtitle','description','button_text','button_link','sort_order','status']);
         
         if ($request->hasFile('background_image')) {
-            $data['background_image'] = $request->file('background_image')->store('hero-sections', 'public');
+            $file = $request->file('background_image');
+            if (!$file->isValid()) {
+                return back()->with('error', 'The background image failed to upload.')->withInput();
+            }
+            // Delete previous image if exists
+            if (!empty($hero->background_image) && Storage::disk('public')->exists($hero->background_image)) {
+                Storage::disk('public')->delete($hero->background_image);
+            }
+            $data['background_image'] = $file->store('hero-sections', 'public');
         }
 
         $hero->update($data);
 
-        return redirect()->route('admin.hero.index')->with('success', 'Hero section updated successfully!');
+        return redirect()->route('admin.hero.edit', $hero)->with('success', 'Hero section updated successfully!');
     }
 
     /**
