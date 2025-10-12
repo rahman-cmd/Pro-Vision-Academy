@@ -21,8 +21,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Get hero sections
-        $heroSections = HeroSection::active()->ordered()->get();
+        // Get single hero section (first active)
+        $heroSection = HeroSection::active()->ordered()->first();
 
         // Get featured courses
         $featuredCourses = Course::where('is_featured', true)
@@ -81,7 +81,7 @@ class HomeController extends Controller
         $aboutSection = AboutSection::active()->first();
 
         return view('frontend.home', compact(
-            'heroSections',
+            'heroSection',
             'featuredCourses',
             'upcomingCourses',
             'internationalSpeakers',

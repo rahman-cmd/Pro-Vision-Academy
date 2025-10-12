@@ -1,8 +1,8 @@
 @include('frontend.layouts.header')
 
 {{-- Hero Section --}}
-@if($heroSections->count() > 0)
-    @include('frontend.hero', ['heroSections' => $heroSections])
+@if(!empty($heroSection))
+    @include('frontend.hero', ['heroSection' => $heroSection])
 @endif
 
 {{-- About Section --}}
