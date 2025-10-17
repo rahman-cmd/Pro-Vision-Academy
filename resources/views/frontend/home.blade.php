@@ -11,7 +11,7 @@
 @endif
 
 {{-- Courses Section --}}
-@if($featuredCourses->count() > 0 || $upcomingCourses->count() > 0)
+@if(($featuredCourses->count() ?? 0) > 0 || ($upcomingCourses->count() ?? 0) > 0)
     @include('frontend.courses', [
         'featuredCourses' => $featuredCourses,
         'upcomingCourses' => $upcomingCourses
