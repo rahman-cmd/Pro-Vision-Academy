@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
             
             // Content sections
             HeroSectionSeeder::class,
-            AboutSectionSeeder::class,
             WhyChooseSectionSeeder::class,
+            AboutSectionSeeder::class,
             
             // Additional content
             TestimonialSeeder::class,

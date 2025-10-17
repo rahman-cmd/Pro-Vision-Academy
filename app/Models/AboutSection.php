@@ -12,10 +12,12 @@ class AboutSection extends Model
     protected $fillable = [
         'title',
         'content',
-        'image',
-        'mission',
-        'vision',
-        'values',
+        'item_one_title',
+        'item_one_content',
+        'item_two_title',
+        'item_two_content',
+        'item_three_title',
+        'item_three_content',
         'status',
     ];
 

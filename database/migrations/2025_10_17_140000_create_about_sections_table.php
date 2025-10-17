@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->string('image')->nullable();
-            $table->text('mission')->nullable();
-            $table->text('vision')->nullable();
-            $table->text('values')->nullable();
+            // Three feature items stored as discrete columns to match model
+            $table->string('item_one_title')->nullable();
+            $table->text('item_one_content')->nullable();
+            $table->string('item_two_title')->nullable();
+            $table->text('item_two_content')->nullable();
+            $table->string('item_three_title')->nullable();
+            $table->text('item_three_content')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
