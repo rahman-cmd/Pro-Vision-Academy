@@ -11,23 +11,17 @@ class Testimonial extends Model
 
     protected $fillable = [
         'name',
-        'position',
-        'company',
+        'country',
         'content',
         'image',
         'rating',
-        'location',
         'status',
-        'is_featured',
-        'sort_order',
     ];
 
     protected function casts(): array
     {
         return [
             'rating' => 'integer',
-            'is_featured' => 'boolean',
-            'sort_order' => 'integer',
         ];
     }
 
@@ -40,22 +34,6 @@ class Testimonial extends Model
     }
 
     /**
-     * Scope to get featured testimonials.
-     */
-    public function scopeFeatured($query)
-    {
-        return $query->where('is_featured', true);
-    }
-
-    /**
-     * Scope to order by sort order.
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('sort_order');
-    }
-
-    /**
      * Check if testimonial is active.
      */
     public function isActive(): bool
@@ -63,35 +41,6 @@ class Testimonial extends Model
         return $this->status === 'active';
     }
 
-    /**
-     * Check if testimonial is featured.
-     */
-    public function isFeatured(): bool
-    {
-        return $this->is_featured;
-    }
-
-    /**
-     * Get the testimonial author's full details.
-     */
-    public function getAuthorDetailsAttribute(): string
-    {
-        $details = $this->name;
-        
-        if ($this->position && $this->company) {
-            $details .= ', ' . $this->position . ' at ' . $this->company;
-        } elseif ($this->position) {
-            $details .= ', ' . $this->position;
-        } elseif ($this->company) {
-            $details .= ', ' . $this->company;
-        }
-        
-        if ($this->location) {
-            $details .= ' - ' . $this->location;
-        }
-        
-        return $details;
-    }
 
     /**
      * Get star rating as HTML.
