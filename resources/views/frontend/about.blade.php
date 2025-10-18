@@ -1,5 +1,5 @@
 <!-- About Section -->
-<section class="bg-gray-50 py-10">
+<section id="about" class="bg-gray-50 py-10">
 	<div class="max-w-7xl mx-auto px-4">
 		<h2 class="text-4xl md:text-5xl font-bold text-center text-[#1a2a3a] mb-6">{{ $aboutSection->title ?? 'About Pro Vision Academy' }}</h2>
 		<p class="text-xl text-center text-gray-500 mb-16 max-w-3xl mx-auto">{{ $aboutSection->content ?? 'We are dedicated to advancing dental education through innovative training programs, expert instruction, and state-of-the-art facilities.' }}</p>

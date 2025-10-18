@@ -76,6 +76,9 @@ class HomeController extends Controller
         // Get about section
         $aboutSection = AboutSection::active()->first();
 
+        // Settings for layout (footer/header)
+        $setting = Setting::current();
+
         return view('frontend.home', compact(
             'heroSection',
             'featuredCourses',
@@ -86,7 +89,8 @@ class HomeController extends Controller
             'whyChooseSections',
             'galleryItems',
             'aboutSection',
-            'newsItems'
+            'newsItems',
+            'setting'
         ));
     }
 
@@ -102,7 +106,9 @@ class HomeController extends Controller
         // Transform only the current page items for the view
         $newsItems = $this->transformNewsCollection($news->getCollection());
 
-        return view('frontend.news', compact('news', 'newsItems'));
+        $setting = Setting::current();
+        
+        return view('frontend.news', compact('news', 'newsItems', 'setting'));
     }
 
     /**
@@ -114,10 +120,13 @@ class HomeController extends Controller
         $whyChooseSections = WhyChooseSection::active()->get();
         $testimonials = Testimonial::active()->latest()->limit(6)->get();
 
+        $setting = Setting::current();
+
         return view('frontend.about', compact(
             'aboutSection',
             'whyChooseSections',
-            'testimonials'
+            'testimonials',
+            'setting'
         ));
     }
 
@@ -172,7 +181,9 @@ class HomeController extends Controller
             ->filter()
             ->sort();
 
-        return view('frontend.courses', compact('courses', 'categories'));
+        $setting = Setting::current();
+
+        return view('frontend.courses', compact('courses', 'categories', 'setting'));
     }
 
     /**
@@ -190,9 +201,12 @@ class HomeController extends Controller
             ->ordered()
             ->get();
 
+        $setting = Setting::current();
+
         return view('frontend.speakers', compact(
             'internationalSpeakers',
-            'localSpeakers'
+            'localSpeakers',
+            'setting'
         ));
     }
 
@@ -205,7 +219,9 @@ class HomeController extends Controller
         // Fetch active gallery items, newest first
         $galleryItems = Gallery::active()->get();
 
-        return view('frontend.gallery', compact('galleryItems'));
+        $setting = Setting::current();
+
+        return view('frontend.gallery', compact('galleryItems', 'setting'));
     }
 
     /**
@@ -213,7 +229,8 @@ class HomeController extends Controller
      */
     public function contact()
     {
-        return view('frontend.contact');
+        $setting = Setting::current();
+        return view('frontend.contact', compact('setting'));
     }
 
     /**
@@ -274,11 +291,14 @@ class HomeController extends Controller
             ->limit(5)
             ->get();
 
+        $setting = Setting::current();
+
         return view('frontend.search-results', compact(
             'query',
             'courses',
             'news',
-            'speakers'
+            'speakers',
+            'setting'
         ));
     }
 

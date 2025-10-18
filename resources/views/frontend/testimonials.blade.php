@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-12">
+<div id="testimonials" class="container mx-auto px-4 py-12">
     <h2 class="text-3xl font-bold text-center mb-6">What Our Students Say</h2>
 
     @if(isset($testimonials) && $testimonials->count())

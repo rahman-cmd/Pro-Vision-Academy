@@ -1,5 +1,5 @@
 <!-- Home Courses Section -->
-<section class="bg-[#fff] py-10">
+<section id="courses" class="bg-[#fff] py-10">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex flex-col items-center mb-6 text-center">
             <h2 class="text-3xl md:text-4xl font-bold text-[#232b36]" style="color:#232b36;">Upcoming Courses</h2>
