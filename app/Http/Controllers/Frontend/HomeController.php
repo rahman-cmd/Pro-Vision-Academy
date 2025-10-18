@@ -53,9 +53,8 @@ class HomeController extends Controller
             ->get();
 
         // Get featured testimonials
-        $testimonials = Testimonial::featured()
-            ->active()
-            ->ordered()
+        $testimonials = Testimonial::active()
+            ->latest()
             ->limit(6)
             ->get();
 
@@ -95,7 +94,7 @@ class HomeController extends Controller
     {
         $aboutSection = AboutSection::active()->first();
         $whyChooseSections = WhyChooseSection::active()->get();
-        $testimonials = Testimonial::active()->ordered()->limit(6)->get();
+        $testimonials = Testimonial::active()->latest()->limit(6)->get();
 
         return view('frontend.about', compact(
             'aboutSection',
