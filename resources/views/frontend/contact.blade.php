@@ -8,13 +8,13 @@
     </div>
 
     @if(session('success'))
-      <div class="mb-6 p-4 rounded-md bg-green-50 border border-green-200 text-green-700">
+      <div role="alert" aria-live="polite" class="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 text-green-700 shadow-sm">
         {{ session('success') }}
       </div>
     @endif
 
     @if ($errors->any())
-      <div class="mb-6 p-4 rounded-md bg-red-50 border border-red-200 text-red-700">
+      <div role="alert" aria-live="assertive" class="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 shadow-sm">
         <ul class="list-disc ml-5 space-y-1">
           @foreach ($errors->all() as $error)
             <li>{{ $error }}</li>
@@ -25,53 +25,91 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Contact Form -->
-      <div class="bg-white shadow rounded-lg p-6">
+      <div class="bg-white shadow rounded-2xl p-6 md:p-8 border border-gray-100">
         <form method="POST" action="{{ route('contact.submit') }}" novalidate>
           @csrf
-          <div class="grid grid-cols-1 gap-4">
-            <div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Name -->
+            <div class="md:col-span-1">
               <label for="name" class="block text-sm font-medium text-gray-700">Name<span class="text-red-500">*</span></label>
-              <input id="name" name="name" type="text" value="{{ old('name') }}" required class="mt-1 block w-full rounded-md border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]" placeholder="Your full name">
+              <div class="mt-1 relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <i class="fas fa-user text-gray-400"></i>
+                </span>
+                <input id="name" name="name" type="text" value="{{ old('name') }}" required autocomplete="name" aria-required="true" aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}" aria-describedby="name-help @error('name') name-error @enderror" placeholder="Your full name" class="block w-full rounded-lg border {{ $errors->has('name') ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]' }} bg-white pl-10 py-2.5 text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none transition" />
+              </div>
+              <p id="name-help" class="mt-1 text-xs text-gray-500">Enter your first and last name.</p>
               @error('name')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                <p id="name-error" class="text-sm text-red-600 mt-1">{{ $message }}</p>
               @enderror
             </div>
 
-            <div>
+            <!-- Email -->
+            <div class="md:col-span-1">
               <label for="email" class="block text-sm font-medium text-gray-700">Email<span class="text-red-500">*</span></label>
-              <input id="email" name="email" type="email" value="{{ old('email') }}" required class="mt-1 block w-full rounded-md border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]" placeholder="you@example.com">
+              <div class="mt-1 relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <i class="fas fa-envelope text-gray-400"></i>
+                </span>
+                <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="email" aria-required="true" aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}" aria-describedby="email-help @error('email') email-error @enderror" placeholder="you@example.com" class="block w-full rounded-lg border {{ $errors->has('email') ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]' }} bg-white pl-10 py-2.5 text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none transition" />
+              </div>
+              <p id="email-help" class="mt-1 text-xs text-gray-500">We’ll never share your email.</p>
               @error('email')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                <p id="email-error" class="text-sm text-red-600 mt-1">{{ $message }}</p>
               @enderror
             </div>
 
-            <div>
+            <!-- Phone -->
+            <div class="md:col-span-1">
               <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-              <input id="phone" name="phone" type="text" value="{{ old('phone') }}" class="mt-1 block w-full rounded-md border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]" placeholder="Optional">
+              <div class="mt-1 relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <i class="fas fa-phone text-gray-400"></i>
+                </span>
+                <input id="phone" name="phone" type="text" value="{{ old('phone') }}" autocomplete="tel" aria-invalid="{{ $errors->has('phone') ? 'true' : 'false' }}" aria-describedby="phone-help @error('phone') phone-error @enderror" placeholder="e.g. +968XXXXXXXXX (optional)" class="block w-full rounded-lg border {{ $errors->has('phone') ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]' }} bg-white pl-10 py-2.5 text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none transition" />
+              </div>
+              <p id="phone-help" class="mt-1 text-xs text-gray-500">Optional — include country code.</p>
               @error('phone')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                <p id="phone-error" class="text-sm text-red-600 mt-1">{{ $message }}</p>
               @enderror
             </div>
 
-            <div>
+            <!-- Subject -->
+            <div class="md:col-span-1">
               <label for="subject" class="block text-sm font-medium text-gray-700">Subject<span class="text-red-500">*</span></label>
-              <input id="subject" name="subject" type="text" value="{{ old('subject') }}" required class="mt-1 block w-full rounded-md border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]" placeholder="How can we help?">
+              <div class="mt-1 relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <i class="fas fa-tag text-gray-400"></i>
+                </span>
+                <input id="subject" name="subject" type="text" value="{{ old('subject') }}" required autocomplete="off" aria-required="true" aria-invalid="{{ $errors->has('subject') ? 'true' : 'false' }}" aria-describedby="subject-help @error('subject') subject-error @enderror" placeholder="How can we help?" class="block w-full rounded-lg border {{ $errors->has('subject') ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]' }} bg-white pl-10 py-2.5 text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none transition" />
+              </div>
+              <p id="subject-help" class="mt-1 text-xs text-gray-500">A short summary of your request.</p>
               @error('subject')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                <p id="subject-error" class="text-sm text-red-600 mt-1">{{ $message }}</p>
               @enderror
             </div>
 
-            <div>
+            <!-- Message -->
+            <div class="md:col-span-2">
               <label for="message" class="block text-sm font-medium text-gray-700">Message<span class="text-red-500">*</span></label>
-              <textarea id="message" name="message" rows="5" required class="mt-1 block w-full rounded-md border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]" placeholder="Write your message here...">{{ old('message') }}</textarea>
+              <div class="mt-1 relative">
+                <span class="pointer-events-none absolute left-0 top-0 pl-3 pt-3 text-gray-400">
+                  <i class="fas fa-comment-dots"></i>
+                </span>
+                <textarea id="message" name="message" rows="5" required aria-required="true" aria-invalid="{{ $errors->has('message') ? 'true' : 'false' }}" aria-describedby="message-help @error('message') message-error @enderror" placeholder="Write your message here..." class="block w-full rounded-lg border {{ $errors->has('message') ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-[#19506b] focus:ring-[#19506b]' }} bg-white pl-10 py-2.5 text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none transition resize-y">{{ old('message') }}</textarea>
+              </div>
+              <p id="message-help" class="mt-1 text-xs text-gray-500">Provide as many details as possible. We typically respond within 24 hours.</p>
               @error('message')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                <p id="message-error" class="text-sm text-red-600 mt-1">{{ $message }}</p>
               @enderror
             </div>
           </div>
 
           <div class="mt-6">
-            <button type="submit" class="bg-[#19506b] text-white px-6 py-3 rounded-md font-semibold shadow hover:bg-[#163e54] transition">Send Message</button>
+            <button type="submit" class="inline-flex items-center gap-2 bg-[#19506b] text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-[#163e54] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#19506b] transition w-full md:w-auto">
+              <i class="fas fa-paper-plane"></i>
+              Send Message
+            </button>
           </div>
         </form>
       </div>
