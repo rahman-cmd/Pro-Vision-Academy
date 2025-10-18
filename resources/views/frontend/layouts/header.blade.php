@@ -1,15 +1,20 @@
+@php($setting = $setting ?? \App\Models\Setting::current())
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Vision Academy</title>
+    <title>{{ $setting->business_name ?? 'Pro Vision Academy' }}</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>html{scroll-behavior:smooth}</style>
+
+    <!-- favicon -->
+    <link rel="icon" href="{{ $setting?->favicon_url ?? asset('images/favicon.ico') }}" type="image/x-icon">
 </head>
 <body>
     <nav class="bg-gray-50 shadow-md">
@@ -17,23 +22,25 @@
             <div class="flex items-center justify-between h-20">
                 <!-- Logo and Title -->
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="rounded-md p-2 flex items-center justify-center">
-                            <img src="{{ asset('images/logo.png') }}" alt="Pro Vision Academy Logo" class="h-12 w-12 object-contain">
+                    <a href="{{ route('home') }}" class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-md p-2 flex items-center justify-center">
+                                <img src="{{ $setting?->logo_url ?? asset('images/logo.png') }}" alt="{{ $setting->business_name ?? 'Pro Vision Academy' }} Logo" class="h-12 w-12 object-contain">
+                            </div>
                         </div>
-                    </div>
-                    <div class="ml-4 flex flex-col">
-                        <span class="text-2xl font-bold text-[#19506b] leading-tight">Pro Vision Academy</span>
-                        <span class="text-sm text-gray-500 -mt-1">Dental Excellence</span>
-                    </div>
+                        <div class="ml-4 flex flex-col">
+                            <span class="text-2xl font-bold text-[#19506b] leading-tight">{{ $setting->business_name ?? 'Pro Vision Academy' }}</span>
+                            <span class="text-sm text-gray-500 -mt-1">Dental Excellence</span>
+                        </div>
+                    </a>
                 </div>
                 <!-- Desktop Navigation Links -->
                 <div class="desktop-nav flex items-center space-x-8">
-                    <a href="#" class="text-gray-700 hover:text-[#19506b] font-medium">Home</a>
-                    <a href="#" class="text-gray-700 hover:text-[#19506b] font-medium">About Us</a>
-                    <a href="#" class="text-gray-700 hover:text-[#19506b] font-medium">Courses</a>
-                    <a href="#" class="text-gray-700 hover:text-[#19506b] font-medium">Testimonials</a>
-                    <a href="#" class="text-gray-700 hover:text-[#19506b] font-medium">Contact</a>
+                    <a href="{{ route('home') }}" class="text-gray-700 hover:text-[#19506b] font-medium">Home</a>
+                    <a href="{{ route('home') }}#about" class="text-gray-700 hover:text-[#19506b] font-medium">About Us</a>
+                    <a href="{{ route('home') }}#courses" class="text-gray-700 hover:text-[#19506b] font-medium">Courses</a>
+                    <a href="{{ route('home') }}#testimonials" class="text-gray-700 hover:text-[#19506b] font-medium">Testimonials</a>
+                    <a href="{{ route('contact') }}" class="text-gray-700 hover:text-[#19506b] font-medium">Contact</a>
                 </div>
                 <!-- Auth Buttons (Desktop) -->
                 <div class="desktop-nav flex items-center space-x-4">
@@ -85,11 +92,11 @@
             </div>
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="mobile-menu hidden flex-col bg-gray-50 rounded-lg shadow-lg mt-2 px-6 py-4 lg:hidden">
-                <a href="#" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Home</a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">About Us</a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Courses</a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Testimonials</a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Contact</a>
+                <a href="{{ route('home') }}" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Home</a>
+                <a href="{{ route('home') }}#about" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">About Us</a>
+                <a href="{{ route('home') }}#courses" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Courses</a>
+                <a href="{{ route('home') }}#testimonials" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Testimonials</a>
+                <a href="{{ route('contact') }}" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Contact</a>
                 
                 @auth
                     <!-- Authenticated User Mobile Menu -->
