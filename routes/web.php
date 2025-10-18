@@ -5,6 +5,7 @@ use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Admin\HeroSectionController;
 use App\Http\Controllers\Admin\AboutSectionController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
@@ -24,7 +25,7 @@ Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/news', [HomeController::class, 'news'])->name('news');
 Route::get('/news/{slug}', [HomeController::class, 'newsDetail'])->name('news.detail');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
-Route::post('/contact', [HomeController::class, 'contactSubmit'])->name('contact.submit');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
 // Authentication Routes
