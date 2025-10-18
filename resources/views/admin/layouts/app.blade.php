@@ -59,7 +59,7 @@
     <!-- Main Container -->
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <aside id="sidebar" class="bg-[#1a2a3a] text-white w-64 h-screen fixed inset-y-0 left-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+        <aside id="sidebar" class="bg-[#1a2a3a] text-white w-64 h-screen fixed inset-y-0 left-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col">
             <div class="flex items-center justify-center h-16 bg-[#19506b] border-b border-gray-700 flex-shrink-0">
                 <img src="/images/logo.png" alt="Logo" class="h-8 w-8 sm:h-10 sm:w-10">
             </div>
@@ -72,7 +72,7 @@
                 </a>
             </div>
             
-            <nav class="flex-1 px-2 py-4 custom-scrollbar overflow-y-auto">
+            <nav class="flex-1 min-h-0 px-2 py-4 custom-scrollbar overflow-y-auto">
                 <ul class="space-y-1">
                     <li>
                         <a href="/admin/dashboard" class="flex items-center px-4 py-3 text-sm rounded-lg hover:bg-[#19506b] transition-colors {{ request()->is('admin/dashboard') ? 'sidebar-active' : '' }}">
