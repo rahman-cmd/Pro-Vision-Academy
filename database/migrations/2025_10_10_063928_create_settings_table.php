@@ -13,11 +13,34 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
-            $table->text('value')->nullable();
-            $table->string('type')->default('text'); // text, textarea, number, boolean, image, etc.
-            $table->string('group')->nullable(); // general, contact, social, etc.
+
+            // Core business and contact info
+            $table->string('business_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
+
+            // Branding assets
+            $table->string('logo')->nullable();
+            $table->string('favicon')->nullable();
+
+            // Site description and copyright
             $table->text('description')->nullable();
+            $table->string('copyright')->nullable();
+
+            // Analytics and Maps
+            $table->string('google_analytics')->nullable();
+            $table->text('google_maps')->nullable();
+
+            // Social links
+            $table->string('facebook')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('linkedin')->nullable();
+
+            // Status
+            $table->string('status')->default('active');
+
             $table->timestamps();
         });
     }
