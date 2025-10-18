@@ -13,14 +13,9 @@ return new class extends Migration
     {
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
             $table->string('image');
-            $table->string('category')->nullable(); // training, surgery, workshop, networking, etc.
-            $table->string('alt_text')->nullable();
+            $table->string('image_title')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->boolean('is_featured')->default(false);
-            $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
     }
