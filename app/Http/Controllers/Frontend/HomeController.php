@@ -13,6 +13,7 @@ use App\Models\AboutSection;
 use App\Models\WhyChooseSection;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -61,11 +62,13 @@ class HomeController extends Controller
         // Get why choose sections (single-record model; fetch active ones)
         $whyChooseSections = WhyChooseSection::active()->get();
 
-        // Get recent news
-        $recentNews = News::published()
+        // Get recent news (raw)
+        $newsRaw = News::published()
             ->latest()
             ->limit(3)
             ->get();
+        // Prepare view-model for news items
+        $newsItems = $this->transformNewsCollection($newsRaw);
 
         // Get featured gallery items
         $galleryItems = Gallery::active()->get();
@@ -81,10 +84,25 @@ class HomeController extends Controller
             'localSpeakers',
             'testimonials',
             'whyChooseSections',
-            'recentNews',
             'galleryItems',
-            'aboutSection'
+            'aboutSection',
+            'newsItems'
         ));
+    }
+
+
+    // News
+
+    /**
+     * Display the news page.
+     */
+    public function news()
+    {
+        $news = News::published()->latest()->paginate(6);
+        // Transform only the current page items for the view
+        $newsItems = $this->transformNewsCollection($news->getCollection());
+
+        return view('frontend.news', compact('news', 'newsItems'));
     }
 
     /**
@@ -178,65 +196,6 @@ class HomeController extends Controller
         ));
     }
 
-    /**
-     * Display the news page.
-     */
-    public function news(Request $request)
-    {
-        $query = News::published();
-
-        // Filter by category
-        if ($request->filled('category')) {
-            $query->byCategory($request->category);
-        }
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%")
-                  ->orWhere('excerpt', 'like', "%{$search}%");
-            });
-        }
-
-        $news = $query->latest()->paginate(9);
-
-        // Get categories for filter
-        $categories = News::getCategories();
-
-        // Get featured news
-        $featuredNews = News::featured()
-            ->published()
-            ->latest()
-            ->limit(3)
-            ->get();
-
-        return view('frontend.news', compact('news', 'categories', 'featuredNews'));
-    }
-
-    /**
-     * Display single news article.
-     */
-    public function newsDetail($slug)
-    {
-        $article = News::where('slug', $slug)
-            ->where('status', 'published')
-            ->firstOrFail();
-
-        // Increment views
-        $article->incrementViews();
-
-        // Get related news
-        $relatedNews = News::published()
-            ->byCategory($article->category)
-            ->where('id', '!=', $article->id)
-            ->latest()
-            ->limit(3)
-            ->get();
-
-        return view('frontend.news-detail', compact('article', 'relatedNews'));
-    }
 
     /**
      * Display the gallery page.
@@ -321,5 +280,48 @@ class HomeController extends Controller
             'news',
             'speakers'
         ));
+    }
+
+    // ---------------------
+    // Helpers (Data Layer)
+    // ---------------------
+
+    /**
+     * Transform a collection of News models into a simple view-model array.
+     *
+     * @param \Illuminate\Support\Collection|array $collection
+     * @return \Illuminate\Support\Collection
+     */
+    protected function transformNewsCollection($collection)
+    {
+        return collect($collection)->map(function (News $item) {
+            return [
+                'title' => $item->title,
+                'excerpt' => Str::limit($item->excerpt ?? '', 140),
+                'image_url' => $this->resolveImageUrl($item->image),
+                'published_date' => $item->published_date ? $item->published_date->format('F d, Y') : null,
+                'url' => route('news.detail', $item->slug),
+            ];
+        });
+    }
+
+    /**
+     * Resolve final image URL for a stored or external path.
+     */
+    protected function resolveImageUrl(?string $image): ?string
+    {
+        if (empty($image)) {
+            return null;
+        }
+
+        if (preg_match('/^(https?:\\/\\/|data:)/', $image)) {
+            return $image;
+        }
+
+        if (preg_match('/^(storage\\/|uploads\\/)/', $image)) {
+            return asset($image);
+        }
+
+        return asset('storage/' . ltrim($image, '/'));
     }
 }

@@ -42,8 +42,8 @@
 @endif
 
 {{-- News Section --}}
-@if($recentNews->count() > 0)
-    @include('frontend.news', ['recentNews' => $recentNews])
+@if(isset($newsItems) && count($newsItems) > 0)
+    @include('frontend.news', ['newsItems' => $newsItems])
 @endif
 
 {{-- Tabs Section --}}
