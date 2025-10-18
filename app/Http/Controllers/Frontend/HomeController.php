@@ -244,19 +244,10 @@ class HomeController extends Controller
      */
     public function gallery(Request $request)
     {
-        $query = Gallery::active();
+        // Fetch active gallery items, newest first
+        $galleryItems = Gallery::active()->get();
 
-        // Filter by category
-        if ($request->filled('category')) {
-            $query->byCategory($request->category);
-        }
-
-        $galleryItems = $query->ordered()->paginate(12);
-
-        // Get categories for filter
-        $categories = Gallery::getCategories();
-
-        return view('frontend.gallery', compact('galleryItems', 'categories'));
+        return view('frontend.gallery', compact('galleryItems'));
     }
 
     /**
