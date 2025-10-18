@@ -7,6 +7,8 @@ use App\Models\WhyChooseSection;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class WhyChooseSectionController extends Controller
 {
@@ -77,7 +79,45 @@ class WhyChooseSectionController extends Controller
         $validated = $this->validateSection($request);
 
         $section = WhyChooseSection::findOrFail($id);
-        $section->update($validated);
+        $data = $validated;
+
+        // If remove requested, delete current file and null out cover_image
+        if ($request->boolean('remove_cover_image')) {
+            if (!empty($section->cover_image) && Str::startsWith($section->cover_image, 'storage/')) {
+                $relative = Str::replaceFirst('storage/', '', $section->cover_image);
+                if (Storage::disk('public')->exists($relative)) {
+                    Storage::disk('public')->delete($relative);
+                }
+            }
+            $data['cover_image'] = null;
+        }
+
+        // Handle new cover image file upload
+        if ($request->hasFile('cover_image_file')) {
+            $file = $request->file('cover_image_file');
+            if (!$file->isValid()) {
+                return back()->with('error', 'The cover image failed to upload.')->withInput();
+            }
+
+            try {
+                $stored = $file->store('why-choose', 'public'); // e.g. why-choose/<filename>
+
+                // Delete old file if exists (and not already removed)
+                if (!empty($section->cover_image) && Str::startsWith($section->cover_image, 'storage/')) {
+                    $relative = Str::replaceFirst('storage/', '', $section->cover_image);
+                    if (Storage::disk('public')->exists($relative)) {
+                        Storage::disk('public')->delete($relative);
+                    }
+                }
+
+                // Persist public URL path (compatible with asset())
+                $data['cover_image'] = 'storage/' . $stored;
+            } catch (\Throwable $e) {
+                return back()->with('error', 'Could not save cover image: ' . $e->getMessage())->withInput();
+            }
+        }
+
+        $section->update($data);
 
         return redirect()->route('admin.why-choose.index')
             ->with('success', 'Why Choose section updated successfully.');
@@ -99,6 +139,8 @@ class WhyChooseSectionController extends Controller
         return $request->validate([
             'heading_title' => 'required|string|max:255',
             'cover_image' => 'nullable|string|max:255',
+            'cover_image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'remove_cover_image' => 'nullable|boolean',
             'card_title_1' => 'nullable|string|max:255',
             'card_content_1' => 'nullable|string',
             'card_title_2' => 'nullable|string|max:255',

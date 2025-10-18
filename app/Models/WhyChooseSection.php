@@ -53,6 +53,14 @@ class WhyChooseSection extends Model
      */
     public function getCoverImageUrlAttribute(): ?string
     {
-        return $this->cover_image ? asset($this->cover_image) : null;
+        if (!$this->cover_image) {
+            return null;
+        }
+        // Return as-is if it's an external URL
+        if (str_starts_with($this->cover_image, 'http://') || str_starts_with($this->cover_image, 'https://')) {
+            return $this->cover_image;
+        }
+        // Otherwise, treat as local storage path
+        return asset($this->cover_image);
     }
 }

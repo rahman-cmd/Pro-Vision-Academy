@@ -14,11 +14,6 @@
 
     <!-- Content -->
     <div class="p-6">
-        @if(session('success'))
-            <div class="mb-4 rounded-lg bg-green-50 border border-green-200 text-green-800 px-4 py-3">
-                {{ session('success') }}
-            </div>
-        @endif
 
         @if($errors->any())
             <div class="mb-4 rounded-lg bg-red-50 border border-red-200 text-red-800 px-4 py-3">
@@ -30,7 +25,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('admin.why-choose.update', $section->id) }}" class="space-y-8">
+        <form method="POST" action="{{ route('admin.why-choose.update', $section->id) }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
             @method('PUT')
 
@@ -59,9 +54,26 @@
                     <div class="space-y-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Cover Image (path or URL)</label>
                         <input type="text" name="cover_image" value="{{ old('cover_image', $section->cover_image) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. storage/why-choose/cover.jpg">
+                        @error('cover_image')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Upload Cover Image</label>
+                            <input type="file" name="cover_image_file" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <p class="text-xs text-gray-500 mt-1">Allowed: JPG, PNG, GIF, WEBP · Max 5MB</p>
+                            @error('cover_image_file')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         @if($section->hasCoverImage())
                             <div class="mt-4">
                                 <img src="{{ $section->cover_image_url ?? $section->cover_image }}" alt="Cover" class="w-full max-w-md rounded-lg border border-gray-200">
+                            </div>
+                            <div class="flex items-center mt-3">
+                                <input type="checkbox" name="remove_cover_image" id="remove_cover_image" class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                                <label for="remove_cover_image" class="ml-2 text-sm text-gray-700">Remove current image</label>
                             </div>
                         @endif
                     </div>
