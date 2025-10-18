@@ -59,10 +59,8 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        // Get why choose sections
-        $whyChooseSections = WhyChooseSection::active()
-            ->ordered()
-            ->get();
+        // Get why choose sections (single-record model; fetch active ones)
+        $whyChooseSections = WhyChooseSection::active()->get();
 
         // Get recent news
         $recentNews = News::published()
@@ -71,11 +69,7 @@ class HomeController extends Controller
             ->get();
 
         // Get featured gallery items
-        $galleryItems = Gallery::featured()
-            ->active()
-            ->ordered()
-            ->limit(8)
-            ->get();
+        $galleryItems = Gallery::active()->get();
 
         // Get about section
         $aboutSection = AboutSection::active()->first();
@@ -100,7 +94,7 @@ class HomeController extends Controller
     public function about()
     {
         $aboutSection = AboutSection::active()->first();
-        $whyChooseSections = WhyChooseSection::active()->ordered()->get();
+        $whyChooseSections = WhyChooseSection::active()->get();
         $testimonials = Testimonial::active()->ordered()->limit(6)->get();
 
         return view('frontend.about', compact(

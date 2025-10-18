@@ -41,10 +41,18 @@ class WhyChooseSection extends Model
     }
 
     /**
-     * Check if section has an icon.
+     * Check if section has a cover image.
      */
-    public function hasIcon(): bool
+    public function hasCoverImage(): bool
     {
-        return !empty($this->icon);
+        return !empty($this->cover_image);
+    }
+
+    /**
+     * Get full URL for cover image if stored as a path.
+     */
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        return $this->cover_image ? asset($this->cover_image) : null;
     }
 }
