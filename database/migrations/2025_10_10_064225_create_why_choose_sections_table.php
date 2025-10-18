@@ -13,12 +13,25 @@ return new class extends Migration
     {
         Schema::create('why_choose_sections', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->string('icon')->nullable();
-            $table->text('content');
+            $table->string('heading_title');
+            $table->string('cover_image')->nullable();
+
+            // Four feature cards (title + content)
+            $table->string('card_title_1')->nullable();
+            $table->text('card_content_1')->nullable();
+
+            $table->string('card_title_2')->nullable();
+            $table->text('card_content_2')->nullable();
+
+            $table->string('card_title_3')->nullable();
+            $table->text('card_content_3')->nullable();
+
+            $table->string('card_title_4')->nullable();
+            $table->text('card_content_4')->nullable();
+
+            // Active/Inactive status
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->integer('sort_order')->default(0);
+
             $table->timestamps();
         });
     }

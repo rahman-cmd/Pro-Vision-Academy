@@ -10,20 +10,18 @@ class WhyChooseSection extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'description',
-        'icon',
-        'content',
+        'heading_title',
+        'cover_image',
+        'card_title_1',
+        'card_title_2',
+        'card_title_3',
+        'card_title_4',
+        'card_content_1',
+        'card_content_2',
+        'card_content_3',
+        'card_content_4',
         'status',
-        'sort_order',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'sort_order' => 'integer',
-        ];
-    }
 
     /**
      * Scope to get active sections.
@@ -33,13 +31,6 @@ class WhyChooseSection extends Model
         return $query->where('status', 'active');
     }
 
-    /**
-     * Scope to order by sort order.
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('sort_order');
-    }
 
     /**
      * Check if section is active.
