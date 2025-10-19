@@ -15,6 +15,8 @@
 
     <!-- favicon -->
     <link rel="icon" href="{{ $setting?->favicon_url ?? asset('images/favicon.ico') }}" type="image/x-icon">
+    <!-- Flowbite (Tailwind components) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 </head>
 <body>
     <nav class="bg-gray-50 shadow-md">
@@ -35,7 +37,7 @@
                     </a>
                 </div>
                 <!-- Desktop Navigation Links -->
-                <div class="desktop-nav flex items-center space-x-8">
+                <div class="desktop-nav hidden lg:flex items-center space-x-8">
                     <a href="{{ route('home') }}" class="text-gray-700 hover:text-[#19506b] font-medium">Home</a>
                     <a href="{{ route('home') }}#about" class="text-gray-700 hover:text-[#19506b] font-medium">About Us</a>
                     <a href="{{ route('home') }}#courses" class="text-gray-700 hover:text-[#19506b] font-medium">Courses</a>
@@ -43,16 +45,16 @@
                     <a href="{{ route('contact') }}" class="text-gray-700 hover:text-[#19506b] font-medium">Contact</a>
                 </div>
                 <!-- Auth Buttons (Desktop) -->
-                <div class="desktop-nav flex items-center space-x-4">
+                <div class="desktop-nav hidden lg:flex items-center space-x-4">
                     @auth
                         <!-- User Dropdown for Authenticated Users -->
                         <div class="relative">
-                            <button id="userDropdown" class="flex items-center text-gray-700 hover:text-[#19506b] font-medium focus:outline-none">
+                            <button id="userDropdownButton" type="button" data-dropdown-toggle="userDropdownMenu" class="flex items-center text-gray-700 hover:text-[#19506b] font-medium focus:outline-none">
                                 <i class="fas fa-user-circle text-xl mr-2"></i>
                                 <span>{{ Auth::user()->first_name }}</span>
                                 <i class="fas fa-chevron-down ml-2 text-sm"></i>
                             </button>
-                            <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                            <div id="userDropdownMenu" class="z-50 hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200">
                                 @if(Auth::user()->isStudent())
                                     <a href="{{ route('student.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
@@ -84,7 +86,7 @@
                     @endauth
                 </div>
                 <!-- Hamburger Icon (Mobile) -->
-                <button id="mobile-menu-btn" class="mobile-nav flex flex-col justify-center items-center w-10 h-10 rounded-md border border-gray-200 lg:hidden focus:outline-none" aria-label="Open menu">
+                <button id="mobile-menu-btn" type="button" data-collapse-toggle="mobile-menu" aria-controls="mobile-menu" aria-expanded="false" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true' ? 'false' : 'true')" class="mobile-nav flex flex-col justify-center items-center w-10 h-10 rounded-md border border-gray-200 lg:hidden focus:outline-none" aria-label="Open menu">
                     <span class="block w-6 h-0.5 bg-[#19506b] mb-1"></span>
                     <span class="block w-6 h-0.5 bg-[#19506b] mb-1"></span>
                     <span class="block w-6 h-0.5 bg-[#19506b]"></span>
@@ -138,41 +140,6 @@
         </div>
     </nav>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-
-            // User dropdown toggle (Desktop)
-            const userDropdown = document.getElementById('userDropdown');
-            const userDropdownMenu = document.getElementById('userDropdownMenu');
-
-            if (userDropdown && userDropdownMenu) {
-                userDropdown.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    userDropdownMenu.classList.toggle('hidden');
-                });
-
-                // Close dropdown when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!userDropdown.contains(e.target) && !userDropdownMenu.contains(e.target)) {
-                        userDropdownMenu.classList.add('hidden');
-                    }
-                });
-
-                // Prevent dropdown from closing when clicking inside
-                userDropdownMenu.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                });
-            }
-        });
-    </script>
+    <!-- Removed custom JS toggles; Flowbite handles dropdown/collapse -->
 </body>
 </html>
