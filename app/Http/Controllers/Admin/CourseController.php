@@ -46,7 +46,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('admin.courses.create');
+        return redirect()->route('admin.courses.index');
     }
 
     /**
@@ -102,7 +102,7 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        return view('admin.courses.edit', compact('course'));
+        return redirect()->route('admin.courses.index');
     }
 
     /**

@@ -1,110 +1,161 @@
 @extends('admin.layouts.app')
 
+@section('page_title', 'Gallery')
+@section('page_subtitle', 'Manage gallery images')
+
 @section('content')
-<div class="bg-white rounded-lg shadow-sm">
-    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+<div class="admin-panel">
+    <div class="admin-panel__head">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Gallery Management</h1>
-            <p class="text-gray-600 mt-1">Add, update, and delete gallery images</p>
+            <h1>Gallery</h1>
+            <p>List view — click Edit to update in a dialog</p>
         </div>
-        <button id="openAddModal" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-            <i class="fas fa-plus mr-2"></i>Add New Image
+        <button type="button" class="admin-btn admin-btn--primary" data-modal-open="createGalleryModal">
+            <i class="fas fa-plus"></i> Add Image
         </button>
     </div>
 
-    <div class="p-6">
-
-
-        @forelse($galleries as $gallery)
-            <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                <div class="flex items-start gap-6">
-                    <div class="w-48 shrink-0">
-                        <img src="{{ image_url($gallery->image) }}" alt="{{ $gallery->image_title ?? 'Gallery Image' }}" class="w-48 h-32 object-cover rounded border"/>
-                    </div>
-                    <div class="flex-1">
-                        <form method="POST" action="{{ route('admin.gallery.update', $gallery->id) }}" enctype="multipart/form-data" class="space-y-4">
-                            @csrf
-                            @method('PUT')
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Replace Image</label>
-                                    <input type="file" name="image_file" accept="image/*" class="w-full px-3 py-2 border rounded" />
-                                    <p class="text-xs text-gray-500 mt-1">Max 5MB. jpeg/png/jpg/gif/webp</p>
+    <div class="admin-panel__body">
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($galleries as $gallery)
+                        <tr>
+                            <td>
+                                <img class="admin-thumb" src="{{ image_url($gallery->image) }}" alt="{{ $gallery->image_title ?? 'Gallery' }}">
+                            </td>
+                            <td class="font-semibold">{{ $gallery->image_title ?: 'Untitled' }}</td>
+                            <td>
+                                <span class="admin-badge {{ $gallery->status === 'active' ? 'admin-badge--ok' : 'admin-badge--muted' }}">
+                                    {{ ucfirst($gallery->status) }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <button type="button"
+                                        class="admin-btn admin-btn--icon admin-btn--edit btn-edit-gallery"
+                                        title="Edit"
+                                        data-update-url="{{ route('admin.gallery.update', $gallery) }}"
+                                        data-title="{{ $gallery->image_title }}"
+                                        data-status="{{ $gallery->status }}"
+                                        data-preview="{{ image_url($gallery->image) }}">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+                                    <form method="POST" action="{{ route('admin.gallery.destroy', $gallery) }}" onsubmit="return confirm('Delete this image?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="admin-btn admin-btn--icon admin-btn--danger" title="Delete"><i class="fas fa-trash"></i></button>
+                                    </form>
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                    <select name="status" class="w-full px-3 py-2 border rounded">
-                                        <option value="active" {{ $gallery->status === 'active' ? 'selected' : '' }}>Active</option>
-                                        <option value="inactive" {{ $gallery->status === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Image Title</label>
-                                    <input type="text" name="image_title" value="{{ old('image_title', $gallery->image_title) }}" class="w-full px-3 py-2 border rounded" />
-                                </div>
-                            </div>
-                            <div class="flex gap-3">
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Update</button>
-                            </div>
-                        </form>
-                        <form method="POST" action="{{ route('admin.gallery.destroy', $gallery->id) }}" onsubmit="return confirm('Delete this image?');" class="mt-2 inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="text-gray-600">No gallery images found.</div>
-        @endforelse
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="4" class="text-center text-[var(--admin-muted)] py-8">No gallery images found.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<!-- Add Image Modal -->
-<div id="addModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg">
-        <div class="px-6 py-4 border-b flex justify-between items-center">
-            <h2 class="text-lg font-semibold">Add New Gallery Image</h2>
-            <button id="closeAddModal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+<div id="createGalleryModal" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal__overlay" data-modal-close></div>
+    <div class="admin-modal__dialog">
+        <div class="admin-modal__head">
+            <h2>Add Gallery Image</h2>
+            <button type="button" class="admin-modal__close" data-modal-close><i class="fas fa-times"></i></button>
         </div>
-        <form method="POST" action="{{ route('admin.gallery.store') }}" enctype="multipart/form-data" class="p-6 space-y-4">
+        <form method="POST" action="{{ route('admin.gallery.store') }}" enctype="multipart/form-data">
             @csrf
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Image File<span class="text-red-500">*</span></label>
-                <input type="file" name="image_file" accept="image/*" required class="w-full px-3 py-2 border rounded" />
-                <p class="text-xs text-gray-500 mt-1">Max 5MB. jpeg/png/jpg/gif/webp</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Image Title</label>
-                    <input type="text" name="image_title" class="w-full px-3 py-2 border rounded" />
+            <div class="admin-modal__body space-y-4">
+                <div class="admin-field">
+                    <label>Image File *</label>
+                    <input type="file" name="image_file" accept="image/*" required>
+                    <div class="admin-field-hint">Max 5MB. jpeg/png/jpg/gif/webp</div>
+                </div>
+                <div class="admin-field">
+                    <label>Image Title</label>
+                    <input type="text" name="image_title">
+                </div>
+                <div class="admin-field">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="active" selected>Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
                 </div>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select name="status" class="w-full px-3 py-2 border rounded">
-                    <option value="active" selected>Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
-            <div class="flex justify-end gap-3 pt-2">
-                <button type="button" id="closeAddModalBtn" class="px-4 py-2 border rounded">Cancel</button>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Add</button>
+            <div class="admin-modal__foot">
+                <button type="button" class="admin-btn admin-btn--ghost" data-modal-close>Cancel</button>
+                <button type="submit" class="admin-btn admin-btn--primary">Add</button>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-    const openBtn = document.getElementById('openAddModal');
-    const modal = document.getElementById('addModal');
-    const closeIcon = document.getElementById('closeAddModal');
-    const closeBtn = document.getElementById('closeAddModalBtn');
-    const closeAll = () => modal.classList.add('hidden');
-    openBtn?.addEventListener('click', () => modal.classList.remove('hidden'));
-    closeIcon?.addEventListener('click', closeAll);
-    closeBtn?.addEventListener('click', closeAll);
-    modal?.addEventListener('click', (e) => { if (e.target === modal) closeAll(); });
-</script>
+<div id="editGalleryModal" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal__overlay" data-modal-close></div>
+    <div class="admin-modal__dialog">
+        <div class="admin-modal__head">
+            <h2>Edit Gallery Image</h2>
+            <button type="button" class="admin-modal__close" data-modal-close><i class="fas fa-times"></i></button>
+        </div>
+        <form id="editGalleryForm" method="POST" action="#" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="admin-modal__body space-y-4">
+                <div class="flex items-center gap-3">
+                    <img id="editGalleryPreview" class="admin-thumb" src="" alt="">
+                    <div class="text-sm text-[var(--admin-muted)]">Current image</div>
+                </div>
+                <div class="admin-field">
+                    <label>Replace Image</label>
+                    <input type="file" name="image_file" accept="image/*">
+                    <div class="admin-field-hint">Leave empty to keep current image.</div>
+                </div>
+                <div class="admin-field">
+                    <label>Image Title</label>
+                    <input type="text" name="image_title">
+                </div>
+                <div class="admin-field">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="admin-modal__foot">
+                <button type="button" class="admin-btn admin-btn--ghost" data-modal-close>Cancel</button>
+                <button type="submit" class="admin-btn admin-btn--primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.btn-edit-gallery').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var form = document.getElementById('editGalleryForm');
+            form.action = btn.dataset.updateUrl;
+            form.querySelector('[name="image_title"]').value = btn.dataset.title || '';
+            form.querySelector('[name="status"]').value = btn.dataset.status || 'active';
+            form.querySelector('[name="image_file"]').value = '';
+            document.getElementById('editGalleryPreview').src = btn.dataset.preview || '';
+            AdminModal.open('editGalleryModal');
+        });
+    });
+});
+</script>
+@endpush

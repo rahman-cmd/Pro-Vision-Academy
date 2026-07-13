@@ -1,141 +1,151 @@
 @extends('admin.layouts.app')
 
+@section('page_title', 'Courses')
+@section('page_subtitle', 'Manage academy courses')
+
 @section('content')
-<div class="bg-white rounded-lg shadow-sm">
-    <!-- Header -->
-    <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Courses Section Management</h1>
-                <p class="text-gray-600 mt-1">Manage upcoming courses and section content</p>
-            </div>
+<div class="admin-panel">
+    <div class="admin-panel__head">
+        <div>
+            <h1>Courses</h1>
+            <p>List view — click Edit to update in a dialog</p>
         </div>
+        <button type="button" class="admin-btn admin-btn--primary" data-modal-open="createCourseModal">
+            <i class="fas fa-plus"></i> Add Course
+        </button>
     </div>
 
-    <!-- Filters -->
-    <div class="p-6">
-        <form method="GET" action="{{ route('admin.courses.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by title/description/category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div>
-                <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">All Status</option>
-                    @foreach(['active','inactive','completed','cancelled'] as $status)
-                        <option value="{{ $status }}" {{ request('status') === $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <input type="text" name="category" value="{{ request('category') }}" placeholder="Category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                    <i class="fas fa-filter mr-2"></i>Apply Filters
-                </button>
-            </div>
+    <div class="admin-panel__body space-y-4">
+        <form method="GET" action="{{ route('admin.courses.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search title/description" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+            <select name="status" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+                <option value="">All Status</option>
+                @foreach(['active','inactive','completed','cancelled'] as $status)
+                    <option value="{{ $status }}" {{ request('status') === $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
+                @endforeach
+            </select>
+            <input type="text" name="category" value="{{ request('category') }}" placeholder="Category" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+            <button type="submit" class="admin-btn admin-btn--ghost"><i class="fas fa-filter"></i> Filter</button>
         </form>
 
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-semibold text-gray-900">
-                <i class="fas fa-graduation-cap text-green-600 mr-2"></i>Course Listings
-            </h3>
-            <div class="flex items-center space-x-3">
-                <span class="text-sm text-gray-600">Total Courses: <span class="font-semibold text-blue-600">{{ $courses->total() }}</span></span>
-                <a href="{{ route('admin.courses.create') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center">
-                    <i class="fas fa-plus mr-2"></i>Add New Course
-                </a>
-            </div>
-        </div>
-        
-        <!-- Courses Grid -->
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
-            @forelse($courses as $course)
-                <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                                    @if($course->image)
-                                        <img src="{{ image_url($course->image) }}" alt="{{ $course->title }}" class="w-12 h-12 object-cover rounded-lg" />
-                                    @else
-                                        <i class="fas fa-tooth text-blue-600 text-xl"></i>
-                                    @endif
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">{{ $course->title }}</h4>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                        @switch($course->level)
-                                            @case('advanced') bg-red-100 text-red-800 @break
-                                            @case('intermediate') bg-yellow-100 text-yellow-800 @break
-                                            @default bg-green-100 text-green-800
-                                        @endswitch">
-                                        {{ ucfirst($course->level ?? 'beginner') }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <a href="{{ route('admin.courses.edit', $course->id) }}" class="text-blue-600 hover:text-blue-800 p-1" title="Edit Course">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form method="POST" action="{{ route('admin.courses.destroy', $course->id) }}" onsubmit="return confirm('Are you sure you want to delete this course?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800 p-1" title="Delete Course">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Price:</span>
-                                <span class="font-semibold text-green-600">OMR {{ number_format($course->price, 2) }}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Date:</span>
-                                <span class="text-sm text-gray-900">{{ optional($course->start_date)->format('M d, Y') }}{{ $course->end_date ? ' - '.optional($course->end_date)->format('M d, Y') : '' }}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Status:</span>
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
-                                    @switch($course->status)
-                                        @case('active') bg-green-100 text-green-800 @break
-                                        @case('inactive') bg-gray-100 text-gray-800 @break
-                                        @case('completed') bg-blue-100 text-blue-800 @break
-                                        @case('cancelled') bg-red-100 text-red-800 @break
-                                        @default bg-gray-100 text-gray-800
-                                    @endswitch">
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Level</th>
+                        <th>Price</th>
+                        <th>Start</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($courses as $course)
+                        <tr>
+                            <td>
+                                @if($course->image)
+                                    <img class="admin-thumb" src="{{ image_url($course->image) }}" alt="{{ $course->title }}">
+                                @else
+                                    <div class="admin-thumb flex items-center justify-center text-[var(--admin-brand)]"><i class="fas fa-book"></i></div>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="font-semibold">{{ $course->title }}</div>
+                                <div class="text-xs text-[var(--admin-muted)]">{{ $course->category }}</div>
+                            </td>
+                            <td><span class="admin-badge">{{ ucfirst($course->level) }}</span></td>
+                            <td class="font-semibold">OMR {{ number_format($course->price, 2) }}</td>
+                            <td>{{ optional($course->start_date)->format('d M Y') }}</td>
+                            <td>
+                                <span class="admin-badge {{ $course->status === 'active' ? 'admin-badge--ok' : ($course->status === 'cancelled' ? 'admin-badge--danger' : 'admin-badge--muted') }}">
                                     {{ ucfirst($course->status) }}
                                 </span>
-                            </div>
-                        </div>
-                        
-                        <p class="text-sm text-gray-600 mt-4 line-clamp-2">
-                            {{ Str::limit($course->description, 140) }}
-                        </p>
-                        
-                        <div class="mt-4 pt-4 border-t border-gray-100">
-                            <a href="{{ route('admin.courses.edit', $course->id) }}" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors">
-                                <i class="fas fa-cog mr-2"></i>Manage Course
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-span-2">
-                    <div class="bg-white rounded-lg border border-gray-200 p-6 text-center">
-                        <p class="text-gray-600">No courses found. Click "Add New Course" to create one.</p>
-                    </div>
-                </div>
-            @endforelse
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <button type="button"
+                                        class="admin-btn admin-btn--icon admin-btn--edit"
+                                        title="Edit"
+                                        data-modal-edit="editCourseModal"
+                                        data-form="editCourseForm"
+                                        data-update-url="{{ route('admin.courses.update', $course) }}"
+                                        data-payload="{{ base64_encode(json_encode([
+                                            'title' => $course->title,
+                                            'category' => $course->category,
+                                            'level' => $course->level,
+                                            'location' => $course->location,
+                                            'description' => $course->description,
+                                            'price' => $course->price,
+                                            'early_bird_price' => $course->early_bird_price,
+                                            'early_bird_deadline' => optional($course->early_bird_deadline)->format('Y-m-d'),
+                                            'start_date' => optional($course->start_date)->format('Y-m-d'),
+                                            'end_date' => optional($course->end_date)->format('Y-m-d'),
+                                            'duration' => $course->duration,
+                                            'max_participants' => $course->max_participants,
+                                            'status' => $course->status,
+                                            'is_featured' => $course->is_featured ? '1' : '0',
+                                            'objectives' => $course->objectives,
+                                            'requirements' => $course->requirements,
+                                        ], JSON_UNESCAPED_UNICODE)) }}">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+                                    <form method="POST" action="{{ route('admin.courses.destroy', $course) }}" onsubmit="return confirm('Delete this course?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="admin-btn admin-btn--icon admin-btn--danger" title="Delete"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="7" class="text-center text-[var(--admin-muted)] py-8">No courses found.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
-        <!-- Pagination -->
-        <div class="mt-6">
-            {{ $courses->withQueryString()->links() }}
+        <div class="mt-4">{{ $courses->withQueryString()->links() }}</div>
+    </div>
+</div>
+
+{{-- Create Modal --}}
+<div id="createCourseModal" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal__overlay" data-modal-close></div>
+    <div class="admin-modal__dialog admin-modal__dialog--lg">
+        <div class="admin-modal__head">
+            <h2>Add Course</h2>
+            <button type="button" class="admin-modal__close" data-modal-close><i class="fas fa-times"></i></button>
         </div>
+        <form method="POST" action="{{ route('admin.courses.store') }}" enctype="multipart/form-data">
+            @csrf
+            <div class="admin-modal__body">@include('admin.courses._form')</div>
+            <div class="admin-modal__foot">
+                <button type="button" class="admin-btn admin-btn--ghost" data-modal-close>Cancel</button>
+                <button type="submit" class="admin-btn admin-btn--primary">Save Course</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Edit Modal --}}
+<div id="editCourseModal" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal__overlay" data-modal-close></div>
+    <div class="admin-modal__dialog admin-modal__dialog--lg">
+        <div class="admin-modal__head">
+            <h2>Edit Course</h2>
+            <button type="button" class="admin-modal__close" data-modal-close><i class="fas fa-times"></i></button>
+        </div>
+        <form id="editCourseForm" method="POST" action="#" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="admin-modal__body">@include('admin.courses._form', ['editing' => true])</div>
+            <div class="admin-modal__foot">
+                <button type="button" class="admin-btn admin-btn--ghost" data-modal-close>Cancel</button>
+                <button type="submit" class="admin-btn admin-btn--primary">Update Course</button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection

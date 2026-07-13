@@ -1,264 +1,156 @@
 @extends('admin.layouts.app')
 
+@section('page_title', 'Speakers')
+@section('page_subtitle', 'Manage international and local speakers')
+
 @section('content')
-<div class="bg-white rounded-lg shadow-sm">
-    <!-- Header -->
-    <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Speakers Section Management</h1>
-                <p class="text-gray-600 mt-1">Manage international and local speakers</p>
-            </div>
-            <a href="{{ route('admin.dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
-            </a>
+<div class="admin-panel">
+    <div class="admin-panel__head">
+        <div>
+            <h1>Speakers</h1>
+            <p>List view — click Edit to update in a dialog</p>
         </div>
+        <button type="button" class="admin-btn admin-btn--primary" data-modal-open="createSpeakerModal">
+            <i class="fas fa-plus"></i> Add Speaker
+        </button>
     </div>
 
-    <!-- Content -->
-    <div class="p-6">
-        {{-- Flash messages --}}
-        @if(session('success'))
-            <div class="mb-4 p-4 bg-green-50 text-green-700 rounded-lg border border-green-200">{{ session('success') }}</div>
-        @endif
-        @if($errors->any())
-            <div class="mb-4 p-4 bg-red-50 text-red-700 rounded-lg border border-red-200">
-                <div class="font-semibold mb-2">There were validation errors:</div>
-                <ul class="list-disc ml-5">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        {{-- Filters --}}
-        <form method="GET" action="{{ route('admin.speakers.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Name, specialization, country" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">All</option>
-                    <option value="international" {{ request('type') === 'international' ? 'selected' : '' }}>International</option>
-                    <option value="local" {{ request('type') === 'local' ? 'selected' : '' }}>Local</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">All</option>
-                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                </select>
-            </div>
-            <div class="flex items-end gap-2">
-                <button type="submit" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800">Apply</button>
-                <a href="{{ route('admin.speakers.index') }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Reset</a>
-            </div>
+    <div class="admin-panel__body space-y-4">
+        <form method="GET" action="{{ route('admin.speakers.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name, country, specialization" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+            <select name="type" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+                <option value="">All Types</option>
+                <option value="international" {{ request('type') === 'international' ? 'selected' : '' }}>International</option>
+                <option value="local" {{ request('type') === 'local' ? 'selected' : '' }}>Local</option>
+            </select>
+            <select name="status" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+                <option value="">All Status</option>
+                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
+            <button type="submit" class="admin-btn admin-btn--ghost"><i class="fas fa-filter"></i> Filter</button>
         </form>
 
-        {{-- Create new speaker --}}
-        <div class="bg-gray-50 rounded-lg p-6 mb-8">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4"><i class="fas fa-plus text-blue-600 mr-2"></i>Add New Speaker</h3>
-            <form method="POST" action="{{ route('admin.speakers.store') }}" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                @csrf
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input type="text" name="full_name" value="{{ old('full_name') }}" class="w-full px-3 py-2 border rounded-lg" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                    <input type="text" name="title" value="{{ old('title') }}" class="w-full px-3 py-2 border rounded-lg" placeholder="Dr., Prof., etc.">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Country</label>
-                    <input type="text" name="country" value="{{ old('country') }}" class="w-full px-3 py-2 border rounded-lg" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Specialization</label>
-                    <input type="text" name="specialization" value="{{ old('specialization') }}" class="w-full px-3 py-2 border rounded-lg" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Institution</label>
-                    <input type="text" name="institution" value="{{ old('institution') }}" class="w-full px-3 py-2 border rounded-lg">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                    <textarea name="bio" rows="3" class="w-full px-3 py-2 border rounded-lg">{{ old('bio') }}</textarea>
-                </div>
-                <div class="lg:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Achievements</label>
-                    <textarea name="achievements" rows="3" class="w-full px-3 py-2 border rounded-lg">{{ old('achievements') }}</textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                    <select name="type" class="w-full px-3 py-2 border rounded-lg" required>
-                        <option value="international" {{ old('type')==='international' ? 'selected' : '' }}>International</option>
-                        <option value="local" {{ old('type')==='local' ? 'selected' : '' }}>Local</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status" class="w-full px-3 py-2 border rounded-lg" required>
-                        <option value="active" {{ old('status')==='active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status')==='inactive' ? 'selected' : '' }}>Inactive</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
-                    <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" class="w-full px-3 py-2 border rounded-lg" min="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">LinkedIn URL</label>
-                    <input type="url" name="linkedin" value="{{ old('linkedin') }}" class="w-full px-3 py-2 border rounded-lg" placeholder="https://linkedin.com/in/...">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Website</label>
-                    <input type="url" name="website" value="{{ old('website') }}" class="w-full px-3 py-2 border rounded-lg" placeholder="https://example.com">
-                </div>
-                <div class="lg:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Photo</label>
-                    <input type="file" name="image" accept="image/*" class="w-full px-3 py-2 border rounded-lg">
-                </div>
-                <div class="lg:col-span-2 flex justify-end">
-                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
-                        <i class="fas fa-save mr-2"></i>Save Speaker
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        {{-- Speakers list --}}
-        <div class="bg-gray-50 rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4"><i class="fas fa-users text-indigo-600 mr-2"></i>All Speakers</h3>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-100">
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Country</th>
+                        <th>Specialization</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($speakers as $speaker)
                         <tr>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-700">Photo</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-700">Name</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-700">Country</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-700">Specialization</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-700">Type</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-700">Status</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-700">Sort</th>
-                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-700">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($speakers as $speaker)
-                            <tr>
-                                <td class="px-4 py-3">
-                                    <img src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}" alt="{{ $speaker->full_title }}" class="w-10 h-10 rounded-full object-cover">
-                                </td>
-                                <td class="px-4 py-3">
-                                    <div class="font-semibold text-gray-900">{{ $speaker->full_title }}</div>
-                                    <div class="text-xs text-gray-500">{{ $speaker->institution }}</div>
-                                </td>
-                                <td class="px-4 py-3 text-gray-700">{{ $speaker->country }}</td>
-                                <td class="px-4 py-3 text-gray-700">{{ $speaker->specialization }}</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 rounded-full text-xs {{ $speaker->type === 'international' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700' }}">{{ ucfirst($speaker->type) }}</span>
-                                </td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 rounded-full text-xs {{ $speaker->status === 'active' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-700' }}">{{ ucfirst($speaker->status) }}</span>
-                                </td>
-                                <td class="px-4 py-3 text-gray-700">{{ $speaker->sort_order }}</td>
-                                <td class="px-4 py-3 text-right">
-                                    <button type="button" onclick="document.getElementById('edit-{{ $speaker->id }}').classList.toggle('hidden')" class="px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded">Edit</button>
-                                    <form method="POST" action="{{ route('admin.speakers.destroy', $speaker) }}" class="inline-block" onsubmit="return confirm('Delete this speaker?');">
+                            <td>
+                                <img class="admin-thumb admin-thumb--round"
+                                     src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}"
+                                     alt="{{ $speaker->full_title }}">
+                            </td>
+                            <td>
+                                <div class="font-semibold">{{ $speaker->full_title }}</div>
+                                <div class="text-xs text-[var(--admin-muted)]">{{ $speaker->institution }}</div>
+                            </td>
+                            <td>{{ $speaker->country }}</td>
+                            <td>{{ $speaker->specialization }}</td>
+                            <td><span class="admin-badge">{{ ucfirst($speaker->type) }}</span></td>
+                            <td>
+                                <span class="admin-badge {{ $speaker->status === 'active' ? 'admin-badge--ok' : 'admin-badge--muted' }}">
+                                    {{ ucfirst($speaker->status) }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <button type="button"
+                                            class="admin-btn admin-btn--icon admin-btn--edit"
+                                            title="Edit"
+                                            data-modal-edit="editSpeakerModal"
+                                            data-form="editSpeakerForm"
+                                            data-update-url="{{ route('admin.speakers.update', $speaker) }}"
+                                            data-payload="{{ base64_encode(json_encode([
+                                                'full_name' => $speaker->full_name,
+                                                'title' => $speaker->title,
+                                                'country' => $speaker->country,
+                                                'specialization' => $speaker->specialization,
+                                                'institution' => $speaker->institution,
+                                                'bio' => $speaker->bio,
+                                                'achievements' => $speaker->achievements,
+                                                'type' => $speaker->type,
+                                                'status' => $speaker->status,
+                                                'sort_order' => $speaker->sort_order,
+                                                'linkedin' => $speaker->linkedin,
+                                                'website' => $speaker->website,
+                                            ], JSON_UNESCAPED_UNICODE)) }}">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+                                    <form method="POST" action="{{ route('admin.speakers.destroy', $speaker) }}" onsubmit="return confirm('Delete this speaker?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded">Delete</button>
+                                        <button type="submit" class="admin-btn admin-btn--icon admin-btn--danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </form>
-                                </td>
-                            </tr>
-                            <tr id="edit-{{ $speaker->id }}" class="hidden bg-gray-50">
-                                <td colspan="8" class="px-4 py-4">
-                                    <form method="POST" action="{{ route('admin.speakers.update', $speaker) }}" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                        @csrf
-                                        @method('PATCH')
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                            <input type="text" name="full_name" value="{{ old('full_name', $speaker->full_name) }}" class="w-full px-3 py-2 border rounded-lg" required>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                                            <input type="text" name="title" value="{{ old('title', $speaker->title) }}" class="w-full px-3 py-2 border rounded-lg">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Country</label>
-                                            <input type="text" name="country" value="{{ old('country', $speaker->country) }}" class="w-full px-3 py-2 border rounded-lg" required>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Specialization</label>
-                                            <input type="text" name="specialization" value="{{ old('specialization', $speaker->specialization) }}" class="w-full px-3 py-2 border rounded-lg" required>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Institution</label>
-                                            <input type="text" name="institution" value="{{ old('institution', $speaker->institution) }}" class="w-full px-3 py-2 border rounded-lg">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                                            <textarea name="bio" rows="3" class="w-full px-3 py-2 border rounded-lg">{{ old('bio', $speaker->bio) }}</textarea>
-                                        </div>
-                                        <div class="lg:col-span-2">
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Achievements</label>
-                                            <textarea name="achievements" rows="3" class="w-full px-3 py-2 border rounded-lg">{{ old('achievements', $speaker->achievements) }}</textarea>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                                            <select name="type" class="w-full px-3 py-2 border rounded-lg" required>
-                                                <option value="international" {{ old('type', $speaker->type)==='international' ? 'selected' : '' }}>International</option>
-                                                <option value="local" {{ old('type', $speaker->type)==='local' ? 'selected' : '' }}>Local</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                            <select name="status" class="w-full px-3 py-2 border rounded-lg" required>
-                                                <option value="active" {{ old('status', $speaker->status)==='active' ? 'selected' : '' }}>Active</option>
-                                                <option value="inactive" {{ old('status', $speaker->status)==='inactive' ? 'selected' : '' }}>Inactive</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
-                                            <input type="number" name="sort_order" value="{{ old('sort_order', $speaker->sort_order) }}" class="w-full px-3 py-2 border rounded-lg" min="0">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">LinkedIn</label>
-                                            <input type="url" name="linkedin" value="{{ old('linkedin', $speaker->linkedin) }}" class="w-full px-3 py-2 border rounded-lg">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Website</label>
-                                            <input type="url" name="website" value="{{ old('website', $speaker->website) }}" class="w-full px-3 py-2 border rounded-lg">
-                                        </div>
-                                        <div class="lg:col-span-2">
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Photo</label>
-                                            <input type="file" name="image" accept="image/*" class="w-full px-3 py-2 border rounded-lg">
-                                        </div>
-                                        <div class="lg:col-span-2 flex justify-end gap-2">
-                                            <button type="submit" class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Update</button>
-                                            <button type="button" onclick="document.getElementById('edit-{{ $speaker->id }}').classList.add('hidden')" class="px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
-                                        </div>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="px-4 py-6 text-center text-gray-500">No speakers found. Add a new speaker above.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="mt-4">
-                {{ $speakers->links() }}
-            </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center text-[var(--admin-muted)] py-8">No speakers found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
+
+        <div class="mt-4">{{ $speakers->links() }}</div>
+    </div>
+</div>
+
+{{-- Create Modal --}}
+<div id="createSpeakerModal" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal__overlay" data-modal-close></div>
+    <div class="admin-modal__dialog admin-modal__dialog--lg">
+        <div class="admin-modal__head">
+            <h2>Add Speaker</h2>
+            <button type="button" class="admin-modal__close" data-modal-close><i class="fas fa-times"></i></button>
+        </div>
+        <form method="POST" action="{{ route('admin.speakers.store') }}" enctype="multipart/form-data">
+            @csrf
+            <div class="admin-modal__body">
+                @include('admin.speakers._form')
+            </div>
+            <div class="admin-modal__foot">
+                <button type="button" class="admin-btn admin-btn--ghost" data-modal-close>Cancel</button>
+                <button type="submit" class="admin-btn admin-btn--primary">Save Speaker</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Edit Modal --}}
+<div id="editSpeakerModal" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal__overlay" data-modal-close></div>
+    <div class="admin-modal__dialog admin-modal__dialog--lg">
+        <div class="admin-modal__head">
+            <h2>Edit Speaker</h2>
+            <button type="button" class="admin-modal__close" data-modal-close><i class="fas fa-times"></i></button>
+        </div>
+        <form id="editSpeakerForm" method="POST" action="#" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
+            <div class="admin-modal__body">
+                @include('admin.speakers._form', ['editing' => true])
+            </div>
+            <div class="admin-modal__foot">
+                <button type="button" class="admin-btn admin-btn--ghost" data-modal-close>Cancel</button>
+                <button type="submit" class="admin-btn admin-btn--primary">Update Speaker</button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection
