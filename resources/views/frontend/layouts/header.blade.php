@@ -5,141 +5,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $setting->business_name ?? 'Pro Vision Academy' }}</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <style>html{scroll-behavior:smooth}</style>
 
-    <!-- favicon -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=3">
     <link rel="icon" href="{{ $setting?->favicon_url ?? asset('images/favicon.ico') }}" type="image/x-icon">
-    <!-- Flowbite (Tailwind components) -->
     <script defer src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 </head>
-<body>
-    <nav class="bg-gray-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Logo and Title -->
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="rounded-md p-2 flex items-center justify-center">
-                                <img src="{{ $setting?->logo_url ?? asset('images/logo.png') }}" alt="{{ $setting->business_name ?? 'Pro Vision Academy' }} Logo" class="h-12 w-12 object-contain">
-                            </div>
-                        </div>
-                        <div class="ml-4 flex flex-col">
-                            <span class="text-2xl font-bold text-[#19506b] leading-tight">{{ $setting->business_name ?? 'Pro Vision Academy' }}</span>
-                            <span class="text-sm text-gray-500 -mt-1">Dental Excellence</span>
-                        </div>
-                    </a>
-                </div>
-                <!-- Desktop Navigation Links -->
-                <div class="desktop-nav hidden lg:flex items-center space-x-8">
-                    <a href="{{ route('home') }}" class="text-gray-700 hover:text-[#19506b] font-medium">Home</a>
-                    <a href="{{ route('home') }}#about" class="text-gray-700 hover:text-[#19506b] font-medium">About Us</a>
-                    <a href="{{ route('home') }}#courses" class="text-gray-700 hover:text-[#19506b] font-medium">Courses</a>
-                    <a href="{{ route('home') }}#testimonials" class="text-gray-700 hover:text-[#19506b] font-medium">Testimonials</a>
-                    <a href="{{ route('contact') }}" class="text-gray-700 hover:text-[#19506b] font-medium">Contact</a>
-                </div>
-                <!-- Auth Buttons (Desktop) -->
-                <div class="desktop-nav hidden lg:flex items-center space-x-4">
-                    @auth
-                        <!-- User Dropdown for Authenticated Users -->
-                        <div class="relative">
-                            <button id="userDropdownButton" type="button" data-dropdown-toggle="userDropdownMenu" class="flex items-center text-gray-700 hover:text-[#19506b] font-medium focus:outline-none">
-                                <i class="fas fa-user-circle text-xl mr-2"></i>
-                                <span>{{ Auth::user()->first_name }}</span>
-                                <i class="fas fa-chevron-down ml-2 text-sm"></i>
-                            </button>
-                            <div id="userDropdownMenu" class="z-50 hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200">
-                                @if(Auth::user()->isStudent())
-                                    <a href="{{ route('student.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                                    </a>
-                                @elseif(Auth::user()->isAdmin())
-                                    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
-                                    </a>
-                                @endif
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-user mr-2"></i>Profile
-                                </a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-cog mr-2"></i>Settings
-                                </a>
-                                <div class="border-t border-gray-100"></div>
-                                <form method="POST" action="{{ route('logout') }}" class="block">
-                                    @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    @else
-                        <!-- Login and Register Buttons for Guests -->
-                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-[#19506b] font-medium px-4 py-2 rounded-md border border-gray-300 hover:border-[#19506b] transition">Login</a>
-                        <a href="{{ route('register') }}" class="bg-[#19506b] text-white px-6 py-3 rounded-md font-semibold shadow hover:bg-[#163e54] transition">Register</a>
-                    @endauth
-                </div>
-                <!-- Hamburger Icon (Mobile) -->
-                <button id="mobile-menu-btn" type="button" data-collapse-toggle="mobile-menu" aria-controls="mobile-menu" aria-expanded="false" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true' ? 'false' : 'true')" class="mobile-nav flex flex-col justify-center items-center w-10 h-10 rounded-md border border-gray-200 lg:hidden focus:outline-none" aria-label="Open menu">
-                    <span class="block w-6 h-0.5 bg-[#19506b] mb-1"></span>
-                    <span class="block w-6 h-0.5 bg-[#19506b] mb-1"></span>
-                    <span class="block w-6 h-0.5 bg-[#19506b]"></span>
-                </button>
+<body class="site-body">
+    <nav class="site-nav" id="site-nav">
+        <div class="site-nav__inner">
+            <a href="{{ route('home') }}" class="site-brand">
+                <img src="{{ $setting?->logo_url ?? asset('images/logo.png') }}" alt="{{ $setting->business_name ?? 'Pro Vision Academy' }} Logo" class="site-brand__logo">
+                <span class="site-brand__text">
+                    <span class="site-brand__name">{{ $setting->business_name ?? 'Pro Vision Academy' }}</span>
+                    <span class="site-brand__tag">Dental Excellence</span>
+                </span>
+            </a>
+
+            <div class="desktop-nav site-nav__links">
+                <a href="{{ route('home') }}">Home</a>
+                <a href="{{ route('home') }}#about">About</a>
+                <a href="{{ route('home') }}#courses">Courses</a>
+                <a href="{{ route('home') }}#speakers">Speakers</a>
+                <a href="{{ route('home') }}#testimonials">Stories</a>
+                <a href="{{ route('contact') }}">Contact</a>
             </div>
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="mobile-menu hidden flex-col bg-gray-50 rounded-lg shadow-lg mt-2 px-6 py-4 lg:hidden">
-                <a href="{{ route('home') }}" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Home</a>
-                <a href="{{ route('home') }}#about" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">About Us</a>
-                <a href="{{ route('home') }}#courses" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Courses</a>
-                <a href="{{ route('home') }}#testimonials" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Testimonials</a>
-                <a href="{{ route('contact') }}" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">Contact</a>
-                
+
+            <div class="desktop-nav site-nav__actions">
                 @auth
-                    <!-- Authenticated User Mobile Menu -->
-                    <div class="border-t border-gray-200 mt-4 pt-4">
-                        <div class="flex items-center mb-3">
-                            <i class="fas fa-user-circle text-xl text-gray-600 mr-2"></i>
-                            <span class="text-gray-700 font-medium">{{ Auth::user()->first_name }}</span>
+                    <div class="relative">
+                        <button id="userDropdownButton" type="button" data-dropdown-toggle="userDropdownMenu" class="site-nav__user">
+                            <i class="fas fa-user-circle"></i>
+                            <span>{{ Auth::user()->first_name }}</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="userDropdownMenu" class="z-50 hidden absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg py-2 border border-[var(--line)]">
+                            @if(Auth::user()->isStudent())
+                                <a href="{{ route('student.dashboard') }}" class="block px-4 py-2.5 text-sm text-[var(--ink)] hover:bg-[var(--fog)]">Dashboard</a>
+                            @elseif(Auth::user()->isAdmin())
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2.5 text-sm text-[var(--ink)] hover:bg-[var(--fog)]">Admin Dashboard</a>
+                            @endif
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2.5 text-sm text-[var(--ink)] hover:bg-[var(--fog)]">Logout</button>
+                            </form>
                         </div>
-                        @if(Auth::user()->isStudent())
-                            <a href="{{ route('student.dashboard') }}" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                            </a>
-                        @elseif(Auth::user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
-                            </a>
-                        @endif
-                        <a href="#" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">
-                            <i class="fas fa-user mr-2"></i>Profile
-                        </a>
-                        <a href="#" class="block py-2 text-gray-700 hover:text-[#19506b] font-medium">
-                            <i class="fas fa-cog mr-2"></i>Settings
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" class="mt-2">
-                            @csrf
-                            <button type="submit" class="w-full text-left py-2 text-gray-700 hover:text-[#19506b] font-medium">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                            </button>
-                        </form>
                     </div>
                 @else
-                    <!-- Guest User Mobile Menu -->
-                    <div class="border-t border-gray-200 mt-4 pt-4 space-y-3">
-                        <a href="{{ route('login') }}" class="block w-full text-center py-2 px-4 border border-gray-300 text-gray-700 rounded-md font-medium hover:border-[#19506b] hover:text-[#19506b] transition">Login</a>
-                        <a href="{{ route('register') }}" class="block w-full text-center bg-[#19506b] text-white px-6 py-3 rounded-md font-semibold shadow hover:bg-[#163e54] transition">Register</a>
-                    </div>
+                    <a href="{{ route('login') }}" class="btn-ghost">Login</a>
+                    <a href="{{ route('register') }}" class="btn-primary">Register</a>
                 @endauth
             </div>
+
+            <button id="mobile-menu-btn" type="button" class="mobile-nav site-nav__burger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="mobile-menu site-nav__mobile hidden">
+            <a href="{{ route('home') }}">Home</a>
+            <a href="{{ route('home') }}#about">About</a>
+            <a href="{{ route('home') }}#courses">Courses</a>
+            <a href="{{ route('home') }}#speakers">Speakers</a>
+            <a href="{{ route('home') }}#testimonials">Stories</a>
+            <a href="{{ route('contact') }}">Contact</a>
+            @auth
+                <div class="site-nav__mobile-auth">
+                    @if(Auth::user()->isStudent())
+                        <a href="{{ route('student.dashboard') }}">Dashboard</a>
+                    @elseif(Auth::user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            @else
+                <div class="site-nav__mobile-auth">
+                    <a href="{{ route('login') }}" class="btn-ghost">Login</a>
+                    <a href="{{ route('register') }}" class="btn-primary">Register</a>
+                </div>
+            @endauth
         </div>
     </nav>
-
-    <!-- Removed custom JS toggles; Flowbite handles dropdown/collapse -->
-</body>
-</html>

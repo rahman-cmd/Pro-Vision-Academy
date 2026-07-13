@@ -27,16 +27,16 @@ if (!function_exists('image_url')) {
         $path = ltrim($path, '/');
 
         if (str_starts_with($path, 'storage/')) {
-            return asset($path);
+            return '/' . $path;
         }
 
         // Files saved directly under public/ (uploads, images, css assets, etc.)
         if (file_exists(public_path($path))) {
-            return asset($path);
+            return '/' . $path;
         }
 
         // Storage::disk('public')->store(...) paths
-        return asset('storage/' . $path);
+        return '/storage/' . $path;
     }
 }
 

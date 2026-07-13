@@ -1,8 +1,10 @@
-<!-- Speakers Section -->
-<section class="bg-white py-10">
-    <div class="max-w-7xl mx-auto px-4">
-        <h2 class="text-4xl md:text-5xl font-bold text-center text-[#19506b] mb-6">Speakers</h2>
-        <p class="text-xl text-center text-gray-500 mb-14 max-w-3xl mx-auto">We are honoured to have welcomed leading experts from across the world.</p>
+<section id="speakers" class="section section--fog">
+    <div class="section__inner">
+        <div class="section__head reveal">
+            <span class="section__eyebrow">Faculty</span>
+            <h2 class="section__title">Speakers</h2>
+            <p class="section__lede">Learn from leading dental experts shaping practice across the region and beyond.</p>
+        </div>
 
         @php
             $hasInternational = isset($internationalSpeakers) && ($internationalSpeakers->count() > 0);
@@ -10,61 +12,51 @@
         @endphp
 
         @if($hasInternational)
-            <div class="mb-12">
-                <h3 class="text-2xl font-bold text-[#19506b] mb-6 text-center">International Speakers</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center items-stretch">
+            <div class="speaker-block reveal">
+                <h3>International Speakers</h3>
+                <div class="speaker-grid">
                     @foreach($internationalSpeakers as $speaker)
-                        <div class="flex flex-col items-center bg-gray-50 rounded-xl shadow p-6 w-full">
-                            <img src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}" alt="{{ $speaker->full_title }}" class="w-28 h-28 rounded-full object-cover mb-4 border-4 border-[#b8e0fa]">
-                            <div class="font-bold text-lg text-[#19506b]">{{ $speaker->full_title }}</div>
-                            <div class="text-gray-500 text-sm mb-1">{{ $speaker->country }}</div>
-                            <div class="text-[#3399cc] font-medium">{{ $speaker->specialization }}</div>
+                        <article class="speaker-item">
+                            <img
+                                src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}"
+                                alt="{{ $speaker->full_title }}"
+                            >
+                            <div class="speaker-item__name">{{ $speaker->full_title }}</div>
+                            <div class="speaker-item__meta">{{ $speaker->country }}</div>
+                            <div class="speaker-item__spec">{{ $speaker->specialization }}</div>
                             @if(!empty($speaker->institution))
-                                <div class="text-xs text-gray-400 mt-1">{{ $speaker->institution }}</div>
+                                <div class="speaker-item__meta">{{ $speaker->institution }}</div>
                             @endif
-                            <div class="flex gap-3 mt-3">
-                                @if(!empty($speaker->linkedin))
-                                    <a href="{{ $speaker->linkedin }}" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 text-sm">LinkedIn</a>
-                                @endif
-                                @if(!empty($speaker->website))
-                                    <a href="{{ $speaker->website }}" target="_blank" rel="noopener" class="text-gray-600 hover:text-gray-800 text-sm">Website</a>
-                                @endif
-                            </div>
-                        </div>
+                        </article>
                     @endforeach
                 </div>
             </div>
         @endif
 
         @if($hasLocal)
-            <div>
-                <h3 class="text-2xl font-bold text-[#19506b] mb-6 text-center">Local Experts</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center items-stretch">
+            <div class="speaker-block reveal">
+                <h3>Local Experts</h3>
+                <div class="speaker-grid">
                     @foreach($localSpeakers as $speaker)
-                        <div class="flex flex-col items-center bg-gray-50 rounded-xl shadow p-6 w-full">
-                            <img src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}" alt="{{ $speaker->full_title }}" class="w-28 h-28 rounded-full object-cover mb-4 border-4 border-[#b8e0fa]">
-                            <div class="font-bold text-lg text-[#19506b]">{{ $speaker->full_title }}</div>
-                            <div class="text-gray-500 text-sm mb-1">{{ $speaker->country }}</div>
-                            <div class="text-[#3399cc] font-medium">{{ $speaker->specialization }}</div>
+                        <article class="speaker-item">
+                            <img
+                                src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}"
+                                alt="{{ $speaker->full_title }}"
+                            >
+                            <div class="speaker-item__name">{{ $speaker->full_title }}</div>
+                            <div class="speaker-item__meta">{{ $speaker->country }}</div>
+                            <div class="speaker-item__spec">{{ $speaker->specialization }}</div>
                             @if(!empty($speaker->institution))
-                                <div class="text-xs text-gray-400 mt-1">{{ $speaker->institution }}</div>
+                                <div class="speaker-item__meta">{{ $speaker->institution }}</div>
                             @endif
-                            <div class="flex gap-3 mt-3">
-                                @if(!empty($speaker->linkedin))
-                                    <a href="{{ $speaker->linkedin }}" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 text-sm">LinkedIn</a>
-                                @endif
-                                @if(!empty($speaker->website))
-                                    <a href="{{ $speaker->website }}" target="_blank" rel="noopener" class="text-gray-600 hover:text-gray-800 text-sm">Website</a>
-                                @endif
-                            </div>
-                        </div>
+                        </article>
                     @endforeach
                 </div>
             </div>
         @endif
 
         @if(!$hasInternational && !$hasLocal)
-            <div class="text-center text-gray-500">No speakers available at the moment.</div>
+            <p class="text-center text-[var(--muted)]">No speakers available at the moment.</p>
         @endif
     </div>
 </section>
