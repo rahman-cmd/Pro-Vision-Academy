@@ -58,7 +58,7 @@
                                         title="Edit"
                                         data-modal-edit="editNewsModal"
                                         data-form="editNewsForm"
-                                        data-update-url="{{ route('admin.news.update', $item) }}"
+                                        data-update-url="{{ route('admin.news.update', $item->id) }}"
                                         data-payload="{{ base64_encode(json_encode([
                                             'title' => $item->title,
                                             'category' => $item->category,
@@ -72,7 +72,7 @@
                                         ], JSON_UNESCAPED_UNICODE)) }}">
                                         <i class="fas fa-pen"></i>
                                     </button>
-                                    <form method="POST" action="{{ route('admin.news.destroy', $item) }}" onsubmit="return confirm('Delete this article?');">
+                                    <form method="POST" action="{{ route('admin.news.destroy', $item->id) }}" onsubmit="return confirm('Delete this article?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="admin-btn admin-btn--icon admin-btn--danger" title="Delete"><i class="fas fa-trash"></i></button>

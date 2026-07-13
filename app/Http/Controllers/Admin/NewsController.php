@@ -37,7 +37,7 @@ class NewsController extends Controller
             'title'            => 'required|string|max:255',
             'content'          => 'required|string',
             'excerpt'          => 'nullable|string|max:500',
-            'image'            => 'nullable|image|max:2048',
+            'image'            => 'nullable|image|max:5120',
             'category'         => 'nullable|string|max:100',
             'author'           => 'nullable|string|max:100',
             'published_date'   => 'nullable|date',
@@ -61,7 +61,7 @@ class NewsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $news)
     {
         return redirect()->route('admin.news.index');
     }
@@ -69,7 +69,7 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $news)
     {
         return redirect()->route('admin.news.index');
     }
@@ -77,15 +77,15 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $news)
     {
-        $news = News::findOrFail($id);
+        $item = $this->resolveNews($news);
 
         $validated = $request->validate([
             'title'            => 'required|string|max:255',
             'content'          => 'required|string',
             'excerpt'          => 'nullable|string|max:500',
-            'image'            => 'nullable|image|max:2048',
+            'image'            => 'nullable|image|max:5120',
             'category'         => 'nullable|string|max:100',
             'author'           => 'nullable|string|max:100',
             'published_date'   => 'nullable|date',
@@ -95,13 +95,13 @@ class NewsController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            delete_public_upload($news->image);
+            delete_public_upload($item->image);
             $validated['image'] = store_public_upload($request->file('image'), 'news');
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
 
-        $news->update($validated);
+        $item->update($validated);
 
         return redirect()->route('admin.news.index')->with('success', 'News article updated successfully.');
     }
@@ -109,14 +109,25 @@ class NewsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $news)
     {
-        $news = News::findOrFail($id);
+        $item = $this->resolveNews($news);
 
-        delete_public_upload($news->image);
+        delete_public_upload($item->image);
 
-        $news->delete();
+        $item->delete();
 
         return redirect()->route('admin.news.index')->with('success', 'News article deleted successfully.');
+    }
+
+    /**
+     * Admin URLs may use numeric id; model route key is slug.
+     */
+    private function resolveNews(string $value): News
+    {
+        return News::query()
+            ->when(ctype_digit($value), fn ($q) => $q->where('id', $value))
+            ->when(! ctype_digit($value), fn ($q) => $q->where('slug', $value))
+            ->firstOrFail();
     }
 }
