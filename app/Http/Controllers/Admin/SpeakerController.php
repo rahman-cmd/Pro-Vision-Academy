@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Speaker;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class SpeakerController extends Controller
@@ -54,7 +53,7 @@ class SpeakerController extends Controller
         $validated = $this->validateSpeaker($request);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('uploads/speakers', 'public');
+            $validated['image'] = store_public_upload($request->file('image'), 'speakers');
         }
 
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
@@ -72,14 +71,11 @@ class SpeakerController extends Controller
         $validated = $this->validateSpeaker($request, true);
 
         if ($request->hasFile('image')) {
-            $newPath = $request->file('image')->store('uploads/speakers', 'public');
-
-            // Delete old image if locally stored
             if ($speaker->image && !$this->isExternalUrl($speaker->image)) {
-                Storage::disk('public')->delete($speaker->image);
+                delete_public_upload($speaker->image);
             }
 
-            $validated['image'] = $newPath;
+            $validated['image'] = store_public_upload($request->file('image'), 'speakers');
         }
 
         $speaker->update($validated);
@@ -93,7 +89,7 @@ class SpeakerController extends Controller
     public function destroy(Speaker $speaker)
     {
         if ($speaker->image && !$this->isExternalUrl($speaker->image)) {
-            Storage::disk('public')->delete($speaker->image);
+            delete_public_upload($speaker->image);
         }
 
         $speaker->delete();

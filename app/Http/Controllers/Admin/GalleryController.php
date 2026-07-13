@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class GalleryController extends Controller
@@ -41,7 +39,6 @@ class GalleryController extends Controller
             'image_file'    => ['required','image','mimes:jpeg,png,jpg,gif,webp','max:5120'],
         ]);
 
-        // Handle image upload
         if ($request->hasFile('image_file')) {
             $file = $request->file('image_file');
             if (!$file->isValid()) {
@@ -49,8 +46,7 @@ class GalleryController extends Controller
             }
 
             try {
-                $stored = $file->store('gallery', 'public');
-                $validated['image'] = 'storage/' . $stored; // asset()-friendly path
+                $validated['image'] = store_public_upload($file, 'gallery');
             } catch (\Throwable $e) {
                 return back()->with('error', 'Could not save image: ' . $e->getMessage())->withInput();
             }
@@ -89,7 +85,6 @@ class GalleryController extends Controller
             'image_file'    => ['nullable','image','mimes:jpeg,png,jpg,gif,webp','max:5120'],
         ]);
 
-        // Handle optional image replacement
         if ($request->hasFile('image_file')) {
             $file = $request->file('image_file');
             if (!$file->isValid()) {
@@ -97,17 +92,8 @@ class GalleryController extends Controller
             }
 
             try {
-                $stored = $file->store('gallery', 'public');
-
-                // Delete old local image if present
-                if (!empty($gallery->image) && Str::startsWith($gallery->image, 'storage/')) {
-                    $relative = Str::replaceFirst('storage/', '', $gallery->image);
-                    if (Storage::disk('public')->exists($relative)) {
-                        Storage::disk('public')->delete($relative);
-                    }
-                }
-
-                $validated['image'] = 'storage/' . $stored;
+                delete_public_upload($gallery->image);
+                $validated['image'] = store_public_upload($file, 'gallery');
             } catch (\Throwable $e) {
                 return back()->with('error', 'Could not save image: ' . $e->getMessage())->withInput();
             }
@@ -124,14 +110,7 @@ class GalleryController extends Controller
      */
     public function destroy(Gallery $gallery): RedirectResponse
     {
-        // Delete local file if stored via public disk
-        if (!empty($gallery->image) && Str::startsWith($gallery->image, 'storage/')) {
-            $relative = Str::replaceFirst('storage/', '', $gallery->image);
-            if (Storage::disk('public')->exists($relative)) {
-                Storage::disk('public')->delete($relative);
-            }
-        }
-
+        delete_public_upload($gallery->image);
         $gallery->delete();
 
         return redirect()->route('admin.gallery.index')

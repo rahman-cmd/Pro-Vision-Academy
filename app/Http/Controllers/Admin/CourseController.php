@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class CourseController extends Controller
@@ -77,7 +76,7 @@ class CourseController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('courses', 'public');
+            $validated['image'] = store_public_upload($request->file('image'), 'courses');
         }
 
         $validated['current_participants'] = 0;
@@ -133,11 +132,8 @@ class CourseController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image
-            if ($course->image) {
-                Storage::disk('public')->delete($course->image);
-            }
-            $validated['image'] = $request->file('image')->store('courses', 'public');
+            delete_public_upload($course->image);
+            $validated['image'] = store_public_upload($request->file('image'), 'courses');
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -160,10 +156,7 @@ class CourseController extends Controller
                 ->with('error', 'Cannot delete course with existing registrations.');
         }
 
-        // Delete image
-        if ($course->image) {
-            Storage::disk('public')->delete($course->image);
-        }
+        delete_public_upload($course->image);
 
         $course->delete();
 

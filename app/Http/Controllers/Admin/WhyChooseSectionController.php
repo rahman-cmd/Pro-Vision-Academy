@@ -7,8 +7,6 @@ use App\Models\WhyChooseSection;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class WhyChooseSectionController extends Controller
 {
@@ -81,18 +79,11 @@ class WhyChooseSectionController extends Controller
         $section = WhyChooseSection::findOrFail($id);
         $data = $validated;
 
-        // If remove requested, delete current file and null out cover_image
         if ($request->boolean('remove_cover_image')) {
-            if (!empty($section->cover_image) && Str::startsWith($section->cover_image, 'storage/')) {
-                $relative = Str::replaceFirst('storage/', '', $section->cover_image);
-                if (Storage::disk('public')->exists($relative)) {
-                    Storage::disk('public')->delete($relative);
-                }
-            }
+            delete_public_upload($section->cover_image);
             $data['cover_image'] = null;
         }
 
-        // Handle new cover image file upload
         if ($request->hasFile('cover_image_file')) {
             $file = $request->file('cover_image_file');
             if (!$file->isValid()) {
@@ -100,18 +91,10 @@ class WhyChooseSectionController extends Controller
             }
 
             try {
-                $stored = $file->store('why-choose', 'public'); // e.g. why-choose/<filename>
-
-                // Delete old file if exists (and not already removed)
-                if (!empty($section->cover_image) && Str::startsWith($section->cover_image, 'storage/')) {
-                    $relative = Str::replaceFirst('storage/', '', $section->cover_image);
-                    if (Storage::disk('public')->exists($relative)) {
-                        Storage::disk('public')->delete($relative);
-                    }
+                if (!$request->boolean('remove_cover_image')) {
+                    delete_public_upload($section->cover_image);
                 }
-
-                // Persist public URL path (compatible with asset())
-                $data['cover_image'] = 'storage/' . $stored;
+                $data['cover_image'] = store_public_upload($file, 'why-choose');
             } catch (\Throwable $e) {
                 return back()->with('error', 'Could not save cover image: ' . $e->getMessage())->withInput();
             }

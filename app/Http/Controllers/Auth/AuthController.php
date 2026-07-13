@@ -206,15 +206,8 @@ class AuthController extends Controller
 
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
-            $file = $request->file('profile_picture');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/profiles'), $filename);
-            $validated['profile_picture'] = 'uploads/profiles/' . $filename;
-
-            // Delete old profile picture if exists
-            if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
-                unlink(public_path($user->profile_picture));
-            }
+            delete_public_upload($user->profile_picture);
+            $validated['profile_picture'] = store_public_upload($request->file('profile_picture'), 'profiles');
         }
 
         $user->update($validated);

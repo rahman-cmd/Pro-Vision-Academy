@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
@@ -48,7 +47,7 @@ class NewsController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('news', 'public');
+            $validated['image'] = store_public_upload($request->file('image'), 'news');
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -96,10 +95,8 @@ class NewsController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($news->image && Storage::disk('public')->exists($news->image)) {
-                Storage::disk('public')->delete($news->image);
-            }
-            $validated['image'] = $request->file('image')->store('news', 'public');
+            delete_public_upload($news->image);
+            $validated['image'] = store_public_upload($request->file('image'), 'news');
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -116,9 +113,7 @@ class NewsController extends Controller
     {
         $news = News::findOrFail($id);
 
-        if ($news->image && Storage::disk('public')->exists($news->image)) {
-            Storage::disk('public')->delete($news->image);
-        }
+        delete_public_upload($news->image);
 
         $news->delete();
 

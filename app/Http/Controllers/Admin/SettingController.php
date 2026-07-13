@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -51,16 +50,14 @@ class SettingController extends Controller
             'favicon'          => ['nullable', 'mimes:ico,png,svg', 'max:1024'],
         ]);
 
-        // Handle logo upload
         if ($request->hasFile('logo')) {
-            $path = $request->file('logo')->store('settings', 'public');
-            $validated['logo'] = 'storage/' . $path;
+            delete_public_upload($setting->logo);
+            $validated['logo'] = store_public_upload($request->file('logo'), 'settings');
         }
 
-        // Handle favicon upload
         if ($request->hasFile('favicon')) {
-            $path = $request->file('favicon')->store('settings', 'public');
-            $validated['favicon'] = 'storage/' . $path;
+            delete_public_upload($setting->favicon);
+            $validated['favicon'] = store_public_upload($request->file('favicon'), 'settings');
         }
 
         $setting->fill($validated);

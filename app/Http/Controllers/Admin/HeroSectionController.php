@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\HeroSection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class HeroSectionController extends Controller
 {
@@ -59,13 +58,13 @@ class HeroSectionController extends Controller
         ]);
 
         $data = $request->only(['title','subtitle','description','button_text','button_link','sort_order','status']);
-        
+
         if ($request->hasFile('background_image')) {
             $file = $request->file('background_image');
             if (!$file->isValid()) {
                 return back()->with('error', 'The background image failed to upload.')->withInput();
             }
-            $data['background_image'] = $file->store('hero-sections', 'public');
+            $data['background_image'] = store_public_upload($file, 'hero-sections');
         }
 
         $hero = HeroSection::create($data);
@@ -106,17 +105,14 @@ class HeroSectionController extends Controller
         ]);
 
         $data = $request->only(['title','subtitle','description','button_text','button_link','sort_order','status']);
-        
+
         if ($request->hasFile('background_image')) {
             $file = $request->file('background_image');
             if (!$file->isValid()) {
                 return back()->with('error', 'The background image failed to upload.')->withInput();
             }
-            // Delete previous image if exists
-            if (!empty($hero->background_image) && Storage::disk('public')->exists($hero->background_image)) {
-                Storage::disk('public')->delete($hero->background_image);
-            }
-            $data['background_image'] = $file->store('hero-sections', 'public');
+            delete_public_upload($hero->background_image);
+            $data['background_image'] = store_public_upload($file, 'hero-sections');
         }
 
         $hero->update($data);
@@ -129,6 +125,7 @@ class HeroSectionController extends Controller
      */
     public function destroy(HeroSection $hero)
     {
+        delete_public_upload($hero->background_image);
         $hero->delete();
         return redirect()->route('admin.hero.index')->with('success', 'Hero section deleted successfully!');
     }
