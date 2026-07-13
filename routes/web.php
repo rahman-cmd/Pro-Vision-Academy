@@ -90,6 +90,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // Why Choose Section Management
     Route::resource('why-choose', WhyChooseSectionController::class);
     
+    // Tabs Section (static management page)
+    Route::get('/tabs', function () {
+        return view('admin.tabs.index');
+    })->name('tabs.index');
+    
     // Settings Management
     Route::resource('settings', SettingController::class);
 });

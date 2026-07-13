@@ -1,234 +1,200 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Dashboard - Pro Vision Academy Admin')
+@section('title', 'Dashboard — Admin')
+@section('page_title', 'Dashboard')
+@section('page_subtitle', 'Academy overview and quick management')
 
 @section('content')
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
-                    <i class="fas fa-book text-2xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-700">Courses Count</h3>
-                    <p class="text-2xl font-bold text-gray-800">3</p>
-                </div>
-            </div>
-        </div>
+<div class="dash-welcome">
+    <div>
+        <h1>Welcome back{{ auth()->user()?->first_name ? ', ' . auth()->user()->first_name : '' }}</h1>
+        <p>Monitor courses, students, and website content from one place.</p>
+    </div>
+    <a href="{{ route('home') }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[var(--admin-brand)] text-white text-sm font-semibold hover:bg-[var(--admin-brand-deep)] transition">
+        <i class="fas fa-globe"></i> Open Website
+    </a>
+</div>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                    <i class="fas fa-microphone text-2xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-700">Speakers Count</h3>
-                    <p class="text-2xl font-bold text-gray-800">5</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
-                    <i class="fas fa-images text-2xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-700">Gallery Images</h3>
-                    <p class="text-2xl font-bold text-gray-800">6</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-orange-100 text-orange-600 mr-4">
-                    <i class="fas fa-user-graduate text-2xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-700">Students</h3>
-                    <p class="text-2xl font-bold text-gray-800">24</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
-                    <i class="fas fa-quote-left text-2xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-700">Testimonials</h3>
-                    <p class="text-2xl font-bold text-gray-800">3</p>
-                </div>
-            </div>
+<div class="dash-stats">
+    <div class="dash-stat">
+        <div class="dash-stat__icon"><i class="fas fa-book-open"></i></div>
+        <div>
+            <p class="dash-stat__label">Courses</p>
+            <div class="dash-stat__value">{{ $stats['total_courses'] ?? 0 }}</div>
+            <div class="dash-stat__meta">{{ $stats['active_courses'] ?? 0 }} active</div>
         </div>
     </div>
-
-    <!-- Students List Section -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold text-gray-800">Recent Students</h2>
-            <a href="/admin/students" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
-                <i class="fas fa-plus mr-2"></i>View All Students
-            </a>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Student Card 1 -->
-            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition">
-                <div class="flex items-center mb-3">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Student" class="w-12 h-12 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Ahmed Hassan</h3>
-                        <p class="text-sm text-gray-600">Dental Surgery Course</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Active</span>
-                    <span class="text-gray-500">Enrolled: Jan 2024</span>
-                </div>
-            </div>
-
-            <!-- Student Card 2 -->
-            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition">
-                <div class="flex items-center mb-3">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Student" class="w-12 h-12 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Fatima Al-Zahra</h3>
-                        <p class="text-sm text-gray-600">Orthodontics Course</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Active</span>
-                    <span class="text-gray-500">Enrolled: Dec 2023</span>
-                </div>
-            </div>
-
-            <!-- Student Card 3 -->
-            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition">
-                <div class="flex items-center mb-3">
-                    <img src="https://randomuser.me/api/portraits/men/56.jpg" alt="Student" class="w-12 h-12 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Omar Khalil</h3>
-                        <p class="text-sm text-gray-600">Periodontics Course</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Pending</span>
-                    <span class="text-gray-500">Enrolled: Feb 2024</span>
-                </div>
-            </div>
-
-            <!-- Student Card 4 -->
-            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition">
-                <div class="flex items-center mb-3">
-                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Student" class="w-12 h-12 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Maryam Ibrahim</h3>
-                        <p class="text-sm text-gray-600">Endodontics Course</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Active</span>
-                    <span class="text-gray-500">Enrolled: Jan 2024</span>
-                </div>
-            </div>
-
-            <!-- Student Card 5 -->
-            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition">
-                <div class="flex items-center mb-3">
-                    <img src="https://randomuser.me/api/portraits/men/72.jpg" alt="Student" class="w-12 h-12 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Yusuf Mahmoud</h3>
-                        <p class="text-sm text-gray-600">Prosthodontics Course</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Active</span>
-                    <span class="text-gray-500">Enrolled: Nov 2023</span>
-                </div>
-            </div>
-
-            <!-- Student Card 6 -->
-            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition">
-                <div class="flex items-center mb-3">
-                    <img src="https://randomuser.me/api/portraits/women/84.jpg" alt="Student" class="w-12 h-12 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Layla Nasser</h3>
-                        <p class="text-sm text-gray-600">Oral Surgery Course</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Inactive</span>
-                    <span class="text-gray-500">Enrolled: Oct 2023</span>
-                </div>
-            </div>
+    <div class="dash-stat">
+        <div class="dash-stat__icon"><i class="fas fa-user-graduate"></i></div>
+        <div>
+            <p class="dash-stat__label">Students</p>
+            <div class="dash-stat__value">{{ $stats['total_students'] ?? 0 }}</div>
+            <div class="dash-stat__meta">{{ $stats['total_registrations'] ?? 0 }} registrations</div>
         </div>
     </div>
+    <div class="dash-stat">
+        <div class="dash-stat__icon"><i class="fas fa-microphone-lines"></i></div>
+        <div>
+            <p class="dash-stat__label">Speakers</p>
+            <div class="dash-stat__value">{{ $stats['total_speakers'] ?? 0 }}</div>
+            <div class="dash-stat__meta">{{ $stats['active_speakers'] ?? 0 }} active</div>
+        </div>
+    </div>
+    <div class="dash-stat">
+        <div class="dash-stat__icon"><i class="fas fa-images"></i></div>
+        <div>
+            <p class="dash-stat__label">Gallery</p>
+            <div class="dash-stat__value">{{ $stats['total_gallery_items'] ?? 0 }}</div>
+            <div class="dash-stat__meta">{{ $stats['active_testimonials'] ?? 0 }} testimonials</div>
+        </div>
+    </div>
+</div>
 
-    <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a href="/admin/hero" class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg p-4 text-center transition">
-                <i class="fas fa-home text-2xl mb-2"></i>
-                <p>Update Hero Section</p>
+<div class="dash-panel mb-6">
+    <div class="dash-panel__head">
+        <h2>Quick Actions</h2>
+    </div>
+    <div class="dash-panel__body">
+        <div class="dash-actions">
+            <a href="{{ route('admin.hero.index') }}" class="dash-action">
+                <i class="fas fa-panorama"></i>
+                <span>Update Hero</span>
             </a>
-            <a href="/admin/courses" class="bg-green-500 hover:bg-green-600 text-white rounded-lg p-4 text-center transition">
-                <i class="fas fa-book text-2xl mb-2"></i>
-                <p>Add Course</p>
+            <a href="{{ route('admin.courses.create') }}" class="dash-action">
+                <i class="fas fa-plus"></i>
+                <span>Add Course</span>
             </a>
-            <a href="/admin/speakers" class="bg-purple-500 hover:bg-purple-600 text-white rounded-lg p-4 text-center transition">
-                <i class="fas fa-microphone text-2xl mb-2"></i>
-                <p>Add Speaker</p>
+            <a href="{{ route('admin.speakers.index') }}" class="dash-action">
+                <i class="fas fa-microphone-lines"></i>
+                <span>Manage Speakers</span>
             </a>
-            <a href="/admin/students" class="bg-orange-500 hover:bg-orange-600 text-white rounded-lg p-4 text-center transition">
-                <i class="fas fa-user-graduate text-2xl mb-2"></i>
-                <p>Manage Students</p>
+            <a href="{{ route('admin.students') }}" class="dash-action">
+                <i class="fas fa-user-graduate"></i>
+                <span>View Students</span>
             </a>
-            <a href="/admin/gallery" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg p-4 text-center transition">
-                <i class="fas fa-images text-2xl mb-2"></i>
-                <p>Update Gallery</p>
+            <a href="{{ route('admin.gallery.index') }}" class="dash-action">
+                <i class="fas fa-images"></i>
+                <span>Gallery</span>
+            </a>
+            <a href="{{ route('admin.news.index') }}" class="dash-action">
+                <i class="fas fa-newspaper"></i>
+                <span>News</span>
+            </a>
+            <a href="{{ route('admin.testimonials.index') }}" class="dash-action">
+                <i class="fas fa-quote-left"></i>
+                <span>Testimonials</span>
+            </a>
+            <a href="{{ route('admin.settings.index') }}" class="dash-action">
+                <i class="fas fa-gear"></i>
+                <span>Settings</span>
             </a>
         </div>
     </div>
+</div>
 
-    <!-- Recent Updates -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Updates</h2>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white">
-                <thead>
-                    <tr>
-                        <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Section</th>
-                        <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Change</th>
-                        <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
-                        <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">By</th>
-                    </tr>
-                </thead>
-                <tbody class="text-gray-600">
-                    <tr class="border-b">
-                        <td class="py-3 px-4">Hero Section</td>
-                        <td class="py-3 px-4">Text updated</td>
-                        <td class="py-3 px-4">{{ date('d/m/Y') }}</td>
-                        <td class="py-3 px-4">Admin</td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-3 px-4">Courses Section</td>
-                        <td class="py-3 px-4">New course added</td>
-                        <td class="py-3 px-4">{{ date('d/m/Y', strtotime('-1 day')) }}</td>
-                        <td class="py-3 px-4">Admin</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Gallery Section</td>
-                        <td class="py-3 px-4">New image added</td>
-                        <td class="py-3 px-4">{{ date('d/m/Y', strtotime('-2 day')) }}</td>
-                        <td class="py-3 px-4">Admin</td>
-                    </tr>
-                </tbody>
-            </table>
+<div class="dash-grid">
+    <section class="dash-panel">
+        <div class="dash-panel__head">
+            <h2>Recent Registrations</h2>
+            <a href="{{ route('admin.students') }}" class="text-sm font-semibold text-[var(--admin-brand)]">View all</a>
         </div>
-    </div>
+        <div class="dash-panel__body overflow-x-auto">
+            @if(($recentRegistrations ?? collect())->count())
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Course</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentRegistrations->take(6) as $registration)
+                            <tr>
+                                <td>
+                                    {{ optional($registration->user)->first_name }}
+                                    {{ optional($registration->user)->last_name }}
+                                </td>
+                                <td>{{ optional($registration->course)->title ?? '—' }}</td>
+                                <td>
+                                    <span class="dash-badge {{ in_array($registration->status, ['confirmed', 'active']) ? 'is-confirmed' : 'is-pending' }}">
+                                        {{ ucfirst($registration->status) }}
+                                    </span>
+                                </td>
+                                <td>{{ optional($registration->created_at)->format('d M Y') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p class="dash-empty">No registrations yet.</p>
+            @endif
+        </div>
+    </section>
+
+    <section class="dash-panel">
+        <div class="dash-panel__head">
+            <h2>Upcoming Courses</h2>
+            <a href="{{ route('admin.courses.index') }}" class="text-sm font-semibold text-[var(--admin-brand)]">Manage</a>
+        </div>
+        <div class="dash-panel__body">
+            @forelse(($upcomingCourses ?? collect()) as $course)
+                <div class="flex items-start justify-between gap-3 py-3 border-b border-[var(--admin-line)] last:border-0">
+                    <div>
+                        <div class="font-semibold text-[var(--admin-ink)]">{{ $course->title }}</div>
+                        <div class="text-sm text-[var(--admin-muted)] mt-0.5">
+                            Starts {{ optional($course->start_date)->format('d M Y') }}
+                        </div>
+                    </div>
+                    <span class="dash-badge">{{ ucfirst($course->level) }}</span>
+                </div>
+            @empty
+                <p class="dash-empty">No upcoming courses scheduled.</p>
+            @endforelse
+        </div>
+    </section>
+</div>
+
+<div class="dash-grid">
+    <section class="dash-panel">
+        <div class="dash-panel__head">
+            <h2>Popular Courses</h2>
+        </div>
+        <div class="dash-panel__body">
+            @forelse(($popularCourses ?? collect()) as $course)
+                <div class="flex items-center justify-between gap-3 py-3 border-b border-[var(--admin-line)] last:border-0">
+                    <div class="min-w-0">
+                        <div class="font-semibold truncate">{{ $course->title }}</div>
+                        <div class="text-sm text-[var(--admin-muted)]">{{ ucfirst($course->status) }}</div>
+                    </div>
+                    <div class="text-sm font-semibold text-[var(--admin-brand)] whitespace-nowrap">
+                        {{ $course->registrations_count }} enrolled
+                    </div>
+                </div>
+            @empty
+                <p class="dash-empty">No course data available.</p>
+            @endforelse
+        </div>
+    </section>
+
+    <section class="dash-panel">
+        <div class="dash-panel__head">
+            <h2>Recent News</h2>
+            <a href="{{ route('admin.news.index') }}" class="text-sm font-semibold text-[var(--admin-brand)]">Manage</a>
+        </div>
+        <div class="dash-panel__body">
+            @forelse(($recentNews ?? collect()) as $item)
+                <div class="py-3 border-b border-[var(--admin-line)] last:border-0">
+                    <div class="font-semibold">{{ $item->title }}</div>
+                    <div class="text-sm text-[var(--admin-muted)] mt-0.5">
+                        {{ optional($item->published_date)->format('d M Y') ?? optional($item->created_at)->format('d M Y') }}
+                    </div>
+                </div>
+            @empty
+                <p class="dash-empty">No published news yet.</p>
+            @endforelse
+        </div>
+    </section>
+</div>
 @endsection
