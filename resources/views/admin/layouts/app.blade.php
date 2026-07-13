@@ -17,7 +17,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v=4">
     <link rel="icon" href="{{ $setting?->favicon_url ?? asset('images/favicon.ico') }}" type="image/x-icon">
 </head>
 <body class="admin-body">
@@ -41,22 +41,24 @@
                 <a href="{{ route('admin.dashboard') }}" class="admin-nav-link {{ request()->routeIs('admin.dashboard') ? 'is-active' : '' }}">
                     <i class="fas fa-gauge-high"></i><span>Dashboard</span>
                 </a>
+
+                <div class="admin-nav-label">Academy</div>
+                <a href="{{ route('admin.courses.index') }}" class="admin-nav-link {{ request()->routeIs('admin.courses.*') ? 'is-active' : '' }}">
+                    <i class="fas fa-book-open"></i><span>Courses</span>
+                </a>
                 <a href="{{ route('admin.students') }}" class="admin-nav-link {{ request()->routeIs('admin.students') ? 'is-active' : '' }}">
                     <i class="fas fa-user-graduate"></i><span>Students</span>
                 </a>
+                <a href="{{ route('admin.speakers.index') }}" class="admin-nav-link {{ request()->routeIs('admin.speakers.*') ? 'is-active' : '' }}">
+                    <i class="fas fa-microphone-lines"></i><span>Speakers</span>
+                </a>
 
-                <div class="admin-nav-label">Website Content</div>
+                <div class="admin-nav-label">Website</div>
                 <a href="{{ route('admin.hero.index') }}" class="admin-nav-link {{ request()->routeIs('admin.hero.*') ? 'is-active' : '' }}">
                     <i class="fas fa-panorama"></i><span>Hero</span>
                 </a>
                 <a href="{{ route('admin.about.index') }}" class="admin-nav-link {{ request()->routeIs('admin.about.*') ? 'is-active' : '' }}">
                     <i class="fas fa-circle-info"></i><span>About</span>
-                </a>
-                <a href="{{ route('admin.courses.index') }}" class="admin-nav-link {{ request()->routeIs('admin.courses.*') ? 'is-active' : '' }}">
-                    <i class="fas fa-book-open"></i><span>Courses</span>
-                </a>
-                <a href="{{ route('admin.speakers.index') }}" class="admin-nav-link {{ request()->routeIs('admin.speakers.*') ? 'is-active' : '' }}">
-                    <i class="fas fa-microphone-lines"></i><span>Speakers</span>
                 </a>
                 <a href="{{ route('admin.why-choose.index') }}" class="admin-nav-link {{ request()->routeIs('admin.why-choose.*') ? 'is-active' : '' }}">
                     <i class="fas fa-shield-halved"></i><span>Why Choose</span>
@@ -70,13 +72,13 @@
                 <a href="{{ route('admin.news.index') }}" class="admin-nav-link {{ request()->routeIs('admin.news.*') ? 'is-active' : '' }}">
                     <i class="fas fa-newspaper"></i><span>News</span>
                 </a>
-                <a href="{{ route('admin.tabs.index') }}" class="admin-nav-link {{ request()->routeIs('admin.tabs.index') ? 'is-active' : '' }}">
-                    <i class="fas fa-table-cells"></i><span>Tabs</span>
-                </a>
 
                 <div class="admin-nav-label">System</div>
                 <a href="{{ route('admin.settings.index') }}" class="admin-nav-link {{ request()->routeIs('admin.settings.*') ? 'is-active' : '' }}">
                     <i class="fas fa-gear"></i><span>Settings</span>
+                </a>
+                <a href="{{ route('admin.tabs.index') }}" class="admin-nav-link {{ request()->routeIs('admin.tabs.index') ? 'is-active' : '' }}">
+                    <i class="fas fa-table-cells"></i><span>Tabs</span>
                 </a>
             </nav>
         </aside>

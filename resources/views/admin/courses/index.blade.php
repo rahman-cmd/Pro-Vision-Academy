@@ -7,8 +7,8 @@
 <div class="admin-panel">
     <div class="admin-panel__head">
         <div>
-            <h1>Courses</h1>
-            <p>List view — click Edit to update in a dialog</p>
+            <h1>Courses <span class="admin-count">{{ $courses->total() }}</span></h1>
+            <p>Browse, filter, and edit courses in a dialog</p>
         </div>
         <button type="button" class="admin-btn admin-btn--primary" data-modal-open="createCourseModal">
             <i class="fas fa-plus"></i> Add Course
@@ -16,15 +16,15 @@
     </div>
 
     <div class="admin-panel__body space-y-4">
-        <form method="GET" action="{{ route('admin.courses.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search title/description" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
-            <select name="status" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+        <form method="GET" action="{{ route('admin.courses.index') }}" class="admin-toolbar">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search title or description">
+            <select name="status">
                 <option value="">All Status</option>
                 @foreach(['active','inactive','completed','cancelled'] as $status)
                     <option value="{{ $status }}" {{ request('status') === $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
                 @endforeach
             </select>
-            <input type="text" name="category" value="{{ request('category') }}" placeholder="Category" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+            <input type="text" name="category" value="{{ request('category') }}" placeholder="Category">
             <button type="submit" class="admin-btn admin-btn--ghost"><i class="fas fa-filter"></i> Filter</button>
         </form>
 
@@ -100,7 +100,15 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center text-[var(--admin-muted)] py-8">No courses found.</td></tr>
+                        <tr>
+                            <td colspan="7">
+                                <div class="admin-empty">
+                                    <div class="admin-empty__icon"><i class="fas fa-book-open"></i></div>
+                                    <h3>No courses found</h3>
+                                    <p>Try adjusting filters or add a new course.</p>
+                                </div>
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -149,3 +157,13 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+@if(request('create') == '1')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.AdminModal) AdminModal.open('createCourseModal');
+});
+</script>
+@endif
+@endpush

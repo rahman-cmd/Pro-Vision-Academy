@@ -7,8 +7,8 @@
 <div class="admin-panel">
     <div class="admin-panel__head">
         <div>
-            <h1>Testimonials</h1>
-            <p>List view — click Edit to update in a dialog</p>
+            <h1>Testimonials <span class="admin-count">{{ $testimonials->total() }}</span></h1>
+            <p>Student reviews shown on the website</p>
         </div>
         <button type="button" class="admin-btn admin-btn--primary" data-modal-open="createTestimonialModal">
             <i class="fas fa-plus"></i> Add Testimonial
@@ -74,7 +74,15 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center text-[var(--admin-muted)] py-8">No testimonials found.</td></tr>
+                        <tr>
+                            <td colspan="7">
+                                <div class="admin-empty">
+                                    <div class="admin-empty__icon"><i class="fas fa-quote-left"></i></div>
+                                    <h3>No testimonials yet</h3>
+                                    <p>Add student feedback to build trust on the homepage.</p>
+                                </div>
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

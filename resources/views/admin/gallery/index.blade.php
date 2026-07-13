@@ -7,8 +7,8 @@
 <div class="admin-panel">
     <div class="admin-panel__head">
         <div>
-            <h1>Gallery</h1>
-            <p>List view — click Edit to update in a dialog</p>
+            <h1>Gallery <span class="admin-count">{{ method_exists($galleries, 'total') ? $galleries->total() : $galleries->count() }}</span></h1>
+            <p>Manage website gallery images</p>
         </div>
         <button type="button" class="admin-btn admin-btn--primary" data-modal-open="createGalleryModal">
             <i class="fas fa-plus"></i> Add Image
@@ -58,7 +58,15 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="text-center text-[var(--admin-muted)] py-8">No gallery images found.</td></tr>
+                        <tr>
+                            <td colspan="4">
+                                <div class="admin-empty">
+                                    <div class="admin-empty__icon"><i class="fas fa-images"></i></div>
+                                    <h3>No gallery images</h3>
+                                    <p>Upload photos to showcase academy moments.</p>
+                                </div>
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

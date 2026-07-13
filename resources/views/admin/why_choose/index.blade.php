@@ -1,158 +1,93 @@
 @extends('admin.layouts.app')
 
+@section('page_title', 'Why Choose')
+@section('page_subtitle', 'Homepage why-choose section')
+
 @section('content')
-<div class="bg-white rounded-lg shadow-sm">
-    <!-- Header -->
-    <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex justify-between items-center">
+<form method="POST" action="{{ route('admin.why-choose.update', $section->id) }}" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
+
+    <div class="admin-panel">
+        <div class="admin-panel__head">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Why Choose Section</h1>
-                <p class="text-gray-600 mt-1">Update content shown on the homepage</p>
+                <h1>Why Choose Section</h1>
+                <p>Update headline, cover image, and feature cards</p>
             </div>
         </div>
-    </div>
 
-    <!-- Content -->
-    <div class="p-6">
+        <div class="admin-panel__body">
+            @if($errors->any())
+                <div class="admin-section" style="background:#fdecec;border-color:#f5c2c2;color:#8a1f1f;margin-bottom:1rem;">
+                    <ul class="list-disc pl-5 space-y-1 text-sm">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        @if($errors->any())
-            <div class="mb-4 rounded-lg bg-red-50 border border-red-200 text-red-800 px-4 py-3">
-                <ul class="list-disc pl-5 space-y-1">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
+            <div class="admin-section">
+                <h3 class="admin-section__title"><i class="fas fa-heading"></i> Section Header</h3>
+                <div class="admin-section__grid admin-section__grid--2">
+                    <div class="admin-field">
+                        <label>Heading Title</label>
+                        <input type="text" name="heading_title" value="{{ old('heading_title', $section->heading_title) }}" required>
+                    </div>
+                    <div class="admin-field">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="active" {{ old('status', $section->status) === 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ old('status', $section->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                    <div class="admin-field">
+                        <label>Cover Image Path / URL</label>
+                        <input type="text" name="cover_image" value="{{ old('cover_image', $section->cover_image) }}" placeholder="e.g. storage/why-choose/cover.jpg">
+                        @error('cover_image')<p class="admin-error">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="admin-field">
+                        <label>Upload Cover Image</label>
+                        <input type="file" name="cover_image_file" accept="image/*">
+                        <div class="admin-field-hint">JPG, PNG, GIF, WEBP · Max 5MB</div>
+                        @error('cover_image_file')<p class="admin-error">{{ $message }}</p>@enderror
+                    </div>
+                </div>
+                @if($section->hasCoverImage())
+                    <div class="admin-preview admin-preview--wide mt-4">
+                        <img src="{{ image_url($section->cover_image) }}" alt="Cover">
+                    </div>
+                    <div class="admin-checkbox-row">
+                        <input type="checkbox" name="remove_cover_image" id="remove_cover_image" value="1">
+                        <label for="remove_cover_image">Remove current image</label>
+                    </div>
+                @endif
+            </div>
+
+            <div class="admin-section">
+                <h3 class="admin-section__title"><i class="fas fa-star"></i> Feature Cards</h3>
+                <div class="admin-section__grid admin-section__grid--2">
+                    @foreach(range(1, 4) as $i)
+                        <div class="admin-section" style="background:white;margin:0;">
+                            <h4 class="font-semibold mb-3">Card {{ $i }}</h4>
+                            <div class="admin-field mb-3">
+                                <label>Title</label>
+                                <input type="text" name="card_title_{{ $i }}" value="{{ old('card_title_'.$i, $section->{'card_title_'.$i}) }}">
+                            </div>
+                            <div class="admin-field">
+                                <label>Content</label>
+                                <textarea name="card_content_{{ $i }}" rows="3">{{ old('card_content_'.$i, $section->{'card_content_'.$i}) }}</textarea>
+                            </div>
+                        </div>
                     @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('admin.why-choose.update', $section->id) }}" enctype="multipart/form-data" class="space-y-8">
-            @csrf
-            @method('PUT')
-
-            <!-- Section Header -->
-            <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                    <i class="fas fa-heading text-blue-600 mr-2"></i>Section Header
-                </h3>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Heading Title</label>
-                            <input type="text" name="heading_title" value="{{ old('heading_title', $section->heading_title) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter section heading" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                            <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="active" {{ old('status', $section->status) === 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ old('status', $section->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Cover Image (path or URL)</label>
-                        <input type="text" name="cover_image" value="{{ old('cover_image', $section->cover_image) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. storage/why-choose/cover.jpg">
-                        @error('cover_image')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-
-                        <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Upload Cover Image</label>
-                            <input type="file" name="cover_image_file" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <p class="text-xs text-gray-500 mt-1">Allowed: JPG, PNG, GIF, WEBP · Max 5MB</p>
-                            @error('cover_image_file')
-                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        @if($section->hasCoverImage())
-                            <div class="mt-4">
-                                <img src="{{ image_url($section->cover_image) }}" alt="Cover" class="w-full max-w-md rounded-lg border border-gray-200">
-                            </div>
-                            <div class="flex items-center mt-3">
-                                <input type="checkbox" name="remove_cover_image" id="remove_cover_image" class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
-                                <label for="remove_cover_image" class="ml-2 text-sm text-gray-700">Remove current image</label>
-                            </div>
-                        @endif
-                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Feature Cards -->
-            <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                    <i class="fas fa-star text-yellow-600 mr-2"></i>Feature Cards
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-lg p-6 border border-gray-200">
-                        <h4 class="font-semibold text-gray-800 mb-4">Card 1</h4>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                                <input type="text" name="card_title_1" value="{{ old('card_title_1', $section->card_title_1) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Content</label>
-                                <textarea name="card_content_1" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ old('card_content_1', $section->card_content_1) }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg p-6 border border-gray-200">
-                        <h4 class="font-semibold text-gray-800 mb-4">Card 2</h4>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                                <input type="text" name="card_title_2" value="{{ old('card_title_2', $section->card_title_2) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Content</label>
-                                <textarea name="card_content_2" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ old('card_content_2', $section->card_content_2) }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg p-6 border border-gray-200">
-                        <h4 class="font-semibold text-gray-800 mb-4">Card 3</h4>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                                <input type="text" name="card_title_3" value="{{ old('card_title_3', $section->card_title_3) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Content</label>
-                                <textarea name="card_content_3" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ old('card_content_3', $section->card_content_3) }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg p-6 border border-gray-200">
-                        <h4 class="font-semibold text-gray-800 mb-4">Card 4</h4>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                                <input type="text" name="card_title_4" value="{{ old('card_title_4', $section->card_title_4) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Content</label>
-                                <textarea name="card_content_4" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ old('card_content_4', $section->card_content_4) }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                <a href="{{ route('admin.dashboard') }}" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium">Cancel</a>
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
-                    <i class="fas fa-save mr-2"></i>Save Changes
-                </button>
-            </div>
-        </form>
+        <div class="admin-panel__foot">
+            <a href="{{ route('admin.dashboard') }}" class="admin-btn admin-btn--ghost">Cancel</a>
+            <button type="submit" class="admin-btn admin-btn--primary"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
     </div>
-</div>
+</form>
 @endsection

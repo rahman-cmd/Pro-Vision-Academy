@@ -7,8 +7,8 @@
 <div class="admin-panel">
     <div class="admin-panel__head">
         <div>
-            <h1>News</h1>
-            <p>List view — click Edit to update in a dialog</p>
+            <h1>News <span class="admin-count">{{ $news->total() }}</span></h1>
+            <p>Publish academy updates and announcements</p>
         </div>
         <button type="button" class="admin-btn admin-btn--primary" data-modal-open="createNewsModal">
             <i class="fas fa-plus"></i> Add Article
@@ -81,7 +81,15 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center text-[var(--admin-muted)] py-8">No articles found.</td></tr>
+                        <tr>
+                            <td colspan="6">
+                                <div class="admin-empty">
+                                    <div class="admin-empty__icon"><i class="fas fa-newspaper"></i></div>
+                                    <h3>No articles found</h3>
+                                    <p>Create your first news article for the website.</p>
+                                </div>
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

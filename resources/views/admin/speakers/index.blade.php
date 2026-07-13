@@ -7,8 +7,8 @@
 <div class="admin-panel">
     <div class="admin-panel__head">
         <div>
-            <h1>Speakers</h1>
-            <p>List view — click Edit to update in a dialog</p>
+            <h1>Speakers <span class="admin-count">{{ $speakers->total() }}</span></h1>
+            <p>International and local faculty profiles</p>
         </div>
         <button type="button" class="admin-btn admin-btn--primary" data-modal-open="createSpeakerModal">
             <i class="fas fa-plus"></i> Add Speaker
@@ -16,14 +16,14 @@
     </div>
 
     <div class="admin-panel__body space-y-4">
-        <form method="GET" action="{{ route('admin.speakers.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name, country, specialization" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
-            <select name="type" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+        <form method="GET" action="{{ route('admin.speakers.index') }}" class="admin-toolbar">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name, country, specialization">
+            <select name="type">
                 <option value="">All Types</option>
                 <option value="international" {{ request('type') === 'international' ? 'selected' : '' }}>International</option>
                 <option value="local" {{ request('type') === 'local' ? 'selected' : '' }}>Local</option>
             </select>
-            <select name="status" class="w-full px-3 py-2 border border-[var(--admin-line)] rounded-lg">
+            <select name="status">
                 <option value="">All Status</option>
                 <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
@@ -100,7 +100,13 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-[var(--admin-muted)] py-8">No speakers found.</td>
+                            <td colspan="7">
+                                <div class="admin-empty">
+                                    <div class="admin-empty__icon"><i class="fas fa-microphone-lines"></i></div>
+                                    <h3>No speakers found</h3>
+                                    <p>Add your first speaker to feature them on the site.</p>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
