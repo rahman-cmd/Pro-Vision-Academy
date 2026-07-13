@@ -53,7 +53,7 @@
                         @enderror
                         @if($hero->background_image)
                             <div class="mt-3">
-                                <img src="{{ asset('storage/'.$hero->background_image) }}" alt="Current Background" class="h-32 rounded-lg border">
+                                <img src="{{ image_url($hero->background_image) }}" alt="Current Background" class="h-32 rounded-lg border">
                             </div>
                         @endif
                     </div>

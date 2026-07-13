@@ -19,8 +19,7 @@
             <div class="bg-gray-50 rounded-lg p-6 mb-6">
                 <div class="flex items-start gap-6">
                     <div class="w-48 shrink-0">
-                        @php($src = \Illuminate\Support\Str::startsWith($gallery->image, 'http') ? $gallery->image : asset($gallery->image))
-                        <img src="{{ $src }}" alt="{{ $gallery->image_title ?? 'Gallery Image' }}" class="w-48 h-32 object-cover rounded border"/>
+                        <img src="{{ image_url($gallery->image) }}" alt="{{ $gallery->image_title ?? 'Gallery Image' }}" class="w-48 h-32 object-cover rounded border"/>
                     </div>
                     <div class="flex-1">
                         <form method="POST" action="{{ route('admin.gallery.update', $gallery->id) }}" enctype="multipart/form-data" class="space-y-4">

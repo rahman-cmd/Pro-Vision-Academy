@@ -81,7 +81,7 @@ class CourseController extends Controller
         }
 
         $validated['current_participants'] = 0;
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_featured'] = $request->boolean('is_featured'); // Use boole
 
         Course::create($validated);
 
@@ -128,7 +128,7 @@ class CourseController extends Controller
             'objectives' => 'nullable|string',
             'requirements' => 'nullable|string',
             'status' => 'required|in:active,inactive,completed,cancelled',
-            'is_featured' => 'boolean',
+            'is_featured' => 'nullable|boolean',
         ]);
 
         // Handle image upload
@@ -140,7 +140,8 @@ class CourseController extends Controller
             $validated['image'] = $request->file('image')->store('courses', 'public');
         }
 
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_featured'] = $request->boolean('is_featured');
+
 
         $course->update($validated);
 

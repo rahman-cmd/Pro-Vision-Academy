@@ -8,7 +8,7 @@
 			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
 				@foreach($galleryItems as $item)
 					<div class="bg-white rounded-xl shadow overflow-hidden flex flex-col">
-						<img src="{{ $item->image }}" alt="{{ $item->image_title ?? 'Gallery Image' }}" class="w-full h-56 object-cover">
+						<img src="{{ image_url($item->image) }}" alt="{{ $item->image_title ?? 'Gallery Image' }}" class="w-full h-56 object-cover">
 						<div class="p-4 flex-1 flex items-center justify-center">
 							<span class="text-[#19506b] font-semibold text-center">{{ $item->image_title ?? 'Gallery Image' }}</span>
 						</div>

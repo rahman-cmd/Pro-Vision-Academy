@@ -99,7 +99,15 @@
                 </div>
                 <div class="flex items-center mt-6">
                     <label class="inline-flex items-center">
-                        <input type="checkbox" name="is_featured" class="rounded" {{ old('is_featured', $course->is_featured) ? 'checked' : '' }}>
+                       <!-- Add this BEFORE your checkbox -->
+                        <input type="hidden" name="is_featured" value="0">
+                        <input 
+                            type="checkbox" 
+                            name="is_featured" 
+                            id="is_featured" 
+                            value="1"
+                            {{ old('is_featured', $course->is_featured) ? 'checked' : '' }}
+                        >
                         <span class="ml-2 text-sm text-gray-700">Feature this course</span>
                     </label>
                 </div>
@@ -121,7 +129,7 @@
                 <input type="file" name="image" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 @if($course->image)
                     <div class="mt-2">
-                        <img src="{{ asset('storage/'.$course->image) }}" alt="{{ $course->title }}" class="w-40 h-28 object-cover rounded">
+                        <img src="{{ image_url($course->image) }}" alt="{{ $course->title }}" class="w-40 h-28 object-cover rounded">
                     </div>
                 @endif
                 <p class="text-xs text-gray-500 mt-1">Accepted: jpeg, png, jpg, gif. Max 2MB.</p>

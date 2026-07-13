@@ -57,7 +57,7 @@
                             <div class="flex items-center space-x-3">
                                 <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                                     @if($course->image)
-                                        <img src="{{ asset('storage/'.$course->image) }}" alt="{{ $course->title }}" class="w-12 h-12 object-cover rounded-lg" />
+                                        <img src="{{ image_url($course->image) }}" alt="{{ $course->title }}" class="w-12 h-12 object-cover rounded-lg" />
                                     @else
                                         <i class="fas fa-tooth text-blue-600 text-xl"></i>
                                     @endif

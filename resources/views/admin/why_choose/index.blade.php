@@ -69,7 +69,7 @@
 
                         @if($section->hasCoverImage())
                             <div class="mt-4">
-                                <img src="{{ $section->cover_image_url ?? $section->cover_image }}" alt="Cover" class="w-full max-w-md rounded-lg border border-gray-200">
+                                <img src="{{ image_url($section->cover_image) }}" alt="Cover" class="w-full max-w-md rounded-lg border border-gray-200">
                             </div>
                             <div class="flex items-center mt-3">
                                 <input type="checkbox" name="remove_cover_image" id="remove_cover_image" class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">

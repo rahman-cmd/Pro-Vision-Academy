@@ -15,10 +15,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center items-stretch">
                     @foreach($internationalSpeakers as $speaker)
                         <div class="flex flex-col items-center bg-gray-50 rounded-xl shadow p-6 w-full">
-                            @php
-                                $img = $speaker->image ? (\Illuminate\Support\Str::startsWith($speaker->image, ['http://', 'https://']) ? $speaker->image : asset('storage/'.$speaker->image)) : 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b';
-                            @endphp
-                            <img src="{{ $img }}" alt="{{ $speaker->full_title }}" class="w-28 h-28 rounded-full object-cover mb-4 border-4 border-[#b8e0fa]">
+                            <img src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}" alt="{{ $speaker->full_title }}" class="w-28 h-28 rounded-full object-cover mb-4 border-4 border-[#b8e0fa]">
                             <div class="font-bold text-lg text-[#19506b]">{{ $speaker->full_title }}</div>
                             <div class="text-gray-500 text-sm mb-1">{{ $speaker->country }}</div>
                             <div class="text-[#3399cc] font-medium">{{ $speaker->specialization }}</div>
@@ -45,10 +42,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center items-stretch">
                     @foreach($localSpeakers as $speaker)
                         <div class="flex flex-col items-center bg-gray-50 rounded-xl shadow p-6 w-full">
-                            @php
-                                $img = $speaker->image ? (\Illuminate\Support\Str::startsWith($speaker->image, ['http://', 'https://']) ? $speaker->image : asset('storage/'.$speaker->image)) : 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b';
-                            @endphp
-                            <img src="{{ $img }}" alt="{{ $speaker->full_title }}" class="w-28 h-28 rounded-full object-cover mb-4 border-4 border-[#b8e0fa]">
+                            <img src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}" alt="{{ $speaker->full_title }}" class="w-28 h-28 rounded-full object-cover mb-4 border-4 border-[#b8e0fa]">
                             <div class="font-bold text-lg text-[#19506b]">{{ $speaker->full_title }}</div>
                             <div class="text-gray-500 text-sm mb-1">{{ $speaker->country }}</div>
                             <div class="text-[#3399cc] font-medium">{{ $speaker->specialization }}</div>

@@ -9,7 +9,7 @@
 
                         <!-- Display testimonial image if available -->
                         @if($t->image)
-                            <img src="{{ $t->image }}" alt="{{ $t->name }}" class="w-14 h-14 rounded-full object-cover mr-4">
+                            <img src="{{ image_url($t->image) }}" alt="{{ $t->name }}" class="w-14 h-14 rounded-full object-cover mr-4">
                         @else
                             <div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mr-4">
                                 <i class="fas fa-user text-gray-500"></i>

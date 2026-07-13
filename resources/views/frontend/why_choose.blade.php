@@ -46,11 +46,7 @@
 
             <!-- Right: Large image -->
             <div class="w-full h-[520px] rounded-xl overflow-hidden">
-                @php
-                    $img = $wc->cover_image ?? null;
-                    $imgSrc = $img ? (filter_var($img, FILTER_VALIDATE_URL) ? $img : asset($img)) : 'https://images.unsplash.com/photo-1685022036567-0b91b29276e1?q=80&w=2231&auto=format&fit=crop&ixlib=rb-4.1.0';
-                @endphp
-                <img src="{{ $imgSrc }}" alt="Why Choose Cover" class="w-full h-full object-cover">
+                <img src="{{ image_url($wc->cover_image, 'https://images.unsplash.com/photo-1685022036567-0b91b29276e1?q=80&w=2231&auto=format&fit=crop&ixlib=rb-4.1.0') }}" alt="Why Choose Cover" class="w-full h-full object-cover">
             </div>
         </div>
     </div>

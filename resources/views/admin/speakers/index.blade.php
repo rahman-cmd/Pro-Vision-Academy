@@ -152,10 +152,7 @@
                         @forelse($speakers as $speaker)
                             <tr>
                                 <td class="px-4 py-3">
-                                    @php
-                                        $img = $speaker->image ? (\Illuminate\Support\Str::startsWith($speaker->image, ['http://', 'https://']) ? $speaker->image : asset('storage/'.$speaker->image)) : 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b';
-                                    @endphp
-                                    <img src="{{ $img }}" alt="{{ $speaker->full_title }}" class="w-10 h-10 rounded-full object-cover">
+                                    <img src="{{ image_url($speaker->image, 'https://ui-avatars.com/api/?name='.urlencode($speaker->full_name).'&background=b8e0fa&color=19506b') }}" alt="{{ $speaker->full_title }}" class="w-10 h-10 rounded-full object-cover">
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="font-semibold text-gray-900">{{ $speaker->full_title }}</div>

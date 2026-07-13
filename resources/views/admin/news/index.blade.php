@@ -19,7 +19,7 @@
               <div class="w-20 h-20 flex-shrink-0 overflow-hidden rounded bg-gray-100">
                 <!-- News Item image -->
                 @if($item->image)
-                  <img src="{{ asset('storage/' . ltrim($item->image, '/')) }}" alt="{{ $item->title }}" class="w-full h-full object-cover" />
+                  <img src="{{ image_url($item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover" />
                 @else
                   <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">No Image</div>
                 @endif
@@ -55,7 +55,7 @@
                       data-date="{{ $item->published_date ? \Illuminate\Support\Carbon::parse($item->published_date)->format('Y-m-d') : '' }}"
                       data-status="{{ $item->status }}"
                       data-featured="{{ (int) $item->is_featured }}"
-                      data-image="{{ $item->image ? asset('storage/' . ltrim($item->image, '/')) : '' }}"
+                      data-image="{{ $item->image ? image_url($item->image) : '' }}"
                       data-excerpt="{{ $item->excerpt }}"
                       data-content="{{ $item->content }}"
                       data-meta="{{ $item->meta_description }}">

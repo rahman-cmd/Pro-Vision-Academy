@@ -330,18 +330,6 @@ class HomeController extends Controller
      */
     protected function resolveImageUrl(?string $image): ?string
     {
-        if (empty($image)) {
-            return null;
-        }
-
-        if (preg_match('/^(https?:\\/\\/|data:)/', $image)) {
-            return $image;
-        }
-
-        if (preg_match('/^(storage\\/|uploads\\/)/', $image)) {
-            return asset($image);
-        }
-
-        return asset('storage/' . ltrim($image, '/'));
+        return image_url($image);
     }
 }

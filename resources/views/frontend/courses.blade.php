@@ -16,7 +16,7 @@
                 @foreach($featuredCourses as $course)
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
                         @if($course->image)
-                            <img src="{{ asset('storage/'.$course->image) }}" alt="{{ $course->title }}" class="w-full h-48 object-cover">
+                            <img src="{{ image_url($course->image) }}" alt="{{ $course->title }}" class="w-full h-48 object-cover">
                         @else
                             <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=600&q=80" alt="{{ $course->title }}" class="w-full h-48 object-cover">
                         @endif

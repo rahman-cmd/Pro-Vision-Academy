@@ -18,7 +18,7 @@
 		</div>
 		<!-- Right: Image Content -->
 		<div class="flex-1 flex flex-col items-center relative">
-			<img src="{{ $heroSection->background_image ? asset('storage/'.$heroSection->background_image) : 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80' }}" alt="{{ $heroSection->title }}" class="rounded-2xl shadow-2xl w-full max-w-xl object-cover">
+			<img src="{{ image_url($heroSection->background_image, 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80') }}" alt="{{ $heroSection->title }}" class="rounded-2xl shadow-2xl w-full max-w-xl object-cover">
 			<!-- Badge -->
 			<div class="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-lg flex items-center px-8 py-6 gap-4 w-[320px]">
 				<div class="bg-[#e6f0f7] p-3 rounded-full">
